@@ -20,7 +20,7 @@ truncate -s0 /var/log/messages
 truncate -s0 /var/log/lastlog
 
 
-rm -rf /tmp/vola /tmp/*.gz /tmp/packer-provisioner-ansible-local
+rm -rf /tmp/*.gz /tmp/packer-provisioner-ansible-local
 
 case "$PACKER_BUILDER_TYPE" in
 

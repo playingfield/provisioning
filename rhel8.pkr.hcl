@@ -22,11 +22,13 @@ source "virtualbox-iso" "rhel8" {
   gfx_efi_resolution     = "1920x1080"
   gfx_vram_size          = "128"
   guest_os_type          = "RedHat_64"
-  guest_additions_mode   = "upload"
+  guest_additions_mode   = "disable"
   hard_drive_interface   = "sata"
+  hard_drive_nonrotational = true
   headless               = true
   http_directory         = "kickstart"
   iso_checksum           = "${var.iso_checksum}"
+  iso_interface          = "ide"
   iso_urls               = ["${var.iso_url1}", "${var.iso_url2}"]
   memory                 = 4096
   nested_virt            = true
@@ -39,7 +41,7 @@ source "virtualbox-iso" "rhel8" {
   vrdp_bind_address      = "0.0.0.0"
   vrdp_port_min          = "5900"
   vrdp_port_max          = "5900"
-  vm_name                = "rhel85-disa-stig"
+  vm_name                = "rhel8-disa-stig"
 }
 
 build {

@@ -1,0 +1,6 @@
+---
+rhel8stig_bootloader_password_hash: vagrant
+rhel8stig_logon_banner_nice: "I've read & consent to terms in IS user agreem't."
+rhel8stig_skip_reboot: false
+run_audit: true
+...

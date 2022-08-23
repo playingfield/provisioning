@@ -1,0 +1,11 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Provision RHEL8 VM
+  hosts: all:!localhost
+  become: true
+  gather_facts: true
+
+  roles:
+    - dvd_repository
+...

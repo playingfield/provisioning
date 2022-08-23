@@ -1,0 +1,20 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Provision RHEL8 VM
+  hosts: all:!localhost
+  become: true
+  gather_facts: true
+
+  tasks:
+    - name: Register RHEL 8
+      redhat_subscription:
+        state: present
+        username: "{{ lookup('env','RH_USER') }}"
+        password: "{{ lookup('env','RH_PASS') }}"
+        syspurpose:
+          role: "Red Hat Enterprise Server"
+          usage: "Development/Test"
+          service_level_agreement: "Self-Support"
+
+...

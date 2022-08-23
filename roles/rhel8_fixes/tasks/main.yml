@@ -1,0 +1,17 @@
+---
+- name: Create faillog directory
+  ansible.builtin.file:
+    path: /var/log/faillock
+    owner: root
+    group: root
+    mode: '0700'
+    state: directory
+    recurse: true
+    setype: faillog_t
+
+- name: Set setype on faillog directory
+  community.general.sefcontext:
+    target: /var/log/faillock
+    ftype: d
+    setype: faillog_t
+    state: present

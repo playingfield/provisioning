@@ -1,0 +1,5 @@
+---
+#
+- name: Desired state
+  ansible.builtin.include_tasks: "{{ desired_state }}.yml"
+...

@@ -1,0 +1,3 @@
+---
+rhel8_mnt_dir: /mnt/rhel8
+desired_state: present

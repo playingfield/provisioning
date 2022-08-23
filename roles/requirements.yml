@@ -1,0 +1,6 @@
+---
+
+- src: https://github.com/bbaassssiiee/RHEL8-STIG.git
+  scm: git
+  name: RHEL8-STIG
+  version: devel

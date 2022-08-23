@@ -1,0 +1,17 @@
+#!/usr/bin/env ansible-playbook -K
+---
+
+- name: Provision RHEL8 VM
+  hosts: all:!localhost
+  become: true
+  gather_facts: true
+  collections: community.general
+
+  vars_files:
+    - stig-vars.yml
+
+  roles:
+    - role: rhel8_fixes
+    - role: RHEL8-STIG
+      tags: run_audit
+...

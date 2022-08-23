@@ -1,0 +1,13 @@
+[dvd-BaseOS]
+name=DVD for RHEL - BaseOS
+baseurl=file://{{ rhel8_mnt_dir }}/BaseOS
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+
+[dvd-AppStream]
+name=DVD for RHEL - AppStream
+baseurl=file://{{ rhel8_mnt_dir }}/AppStream
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release

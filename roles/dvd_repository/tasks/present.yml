@@ -1,0 +1,46 @@
+---
+
+- name: See if mount directory exists
+  ansible.builtin.stat:
+    path: "{{ rhel8_mnt_dir }}"
+  register: mount_dir
+
+- name: Create mount directory
+  when: not mount_dir.stat.exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ rhel8_mnt_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Mount RHEL DVD
+  become: true
+  ansible.builtin.mount:
+    path: "{{ rhel8_mnt_dir }}"
+    src: /dev/sr0
+    opts: ro,noauto
+    fstype: iso9660
+    state: mounted
+  tags:
+    - notest
+
+- name: Determine IP address
+  ansible.builtin.set_fact:
+    # yamllint disable-line rule:line-length
+    kickstart_server: "{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
+
+- name: Install yum repo file
+  become: true
+  ansible.builtin.template:
+    src: redhat.repo.j2
+    dest: "/etc/yum.repos.d/redhat.repo"
+    owner: root
+    group: root
+    mode: 0640
+
+- name: Yum clean all
+  become: true
+  ansible.builtin.command: yum clean all
+  args:
+    creates: /var/cache/dnf/packages.db
+    warn: false
