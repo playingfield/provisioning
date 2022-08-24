@@ -1,0 +1,38 @@
+#!/usr/bin/env ansible-playbook -K
+---
+
+- name: Security Audit
+  hosts: all:!localhost
+  become: true
+  gather_facts: true
+
+  post_tasks:
+    - name: Install bzip2
+      package:
+        name: bzip2
+        state: present
+
+    - name: Upload OVAL definitions
+      copy:
+        src: rhel-8.oval.xml.bz2
+        dest: /tmp/
+
+    - name: Unpack
+      shell: bzip2 --decompress > /tmp/rhel-8.oval.xml < /tmp/rhel-8.oval.xml.bz2
+      args:
+        warn: false
+
+    - name: 'Run the audit and create a report.'
+      command:
+        oscap oval eval \
+          --report /tmp/vulnerabilities.html
+          /tmp/rhel-8.oval.xml
+      no_log: true
+      ignore_errors: true
+
+    - name: 'Fetch the report.'
+      fetch:
+        flat: true
+        src: /tmp/vulnerabilities.html
+        dest: "~/Downloads/vulnerabilities.html"
+...
