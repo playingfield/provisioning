@@ -1,6 +1,6 @@
 ---
 
-- src: dockpack.nettime
+- src: dockpack.base_nettime
   name: chrony
 
 - src: https://github.com/bbaassssiiee/RHEL8-STIG.git
