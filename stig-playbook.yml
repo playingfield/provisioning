@@ -11,6 +11,7 @@
     - stig-vars.yml
 
   roles:
+    - chrony
     - role: rhel8_fixes
-    - role: RHEL8-STIG
+#    - role: RHEL8-STIG
 ...

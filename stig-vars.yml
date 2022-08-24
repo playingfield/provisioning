@@ -4,4 +4,8 @@ rhel8stig_bootloader_password_hash: grub.pbkdf2.sha512.10000.44B1E06FC7DF8CB9760
 rhel8stig_logon_banner_nice: "I've read & consent to terms in IS user agreem't."
 rhel8stig_skip_reboot: false
 run_audit: true
+
+nettime_keyid: 123567
+chrony_key: '123567 SHA256 HEX:5AD1B939B4E9791549DED46945D09D66F6AB89A83D38EB198975B5E7806E0749'
+net_allow: []
 ...

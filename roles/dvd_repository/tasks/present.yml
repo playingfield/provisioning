@@ -18,7 +18,7 @@
   ansible.builtin.mount:
     path: "{{ rhel8_mnt_dir }}"
     src: /dev/sr0
-    opts: ro,noauto
+    opts: ro,noauto,nodev,nosuid,noexec
     fstype: iso9660
     state: mounted
   tags:
