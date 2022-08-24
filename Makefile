@@ -3,6 +3,7 @@ lint:
 	vagrant validate
 	packer validate rhel8.pkr.hcl
 	ansible-inventory --graph
+	ansible-galaxy install -p roles -f -r roles/requirements.yml
 	ansible-lint vagrant-playbook.yml
 
 clean: lint
