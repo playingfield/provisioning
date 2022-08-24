@@ -15,3 +15,27 @@
     ftype: d
     setype: faillog_t
     state: present
+
+- name: Set Ciphers for STIG audit
+  lineinfile:
+    path: /etc/crypto-policies/back-ends/openssh.config
+    regexp: "^Ciphers"
+    line: "Ciphers aes256-ctr,aes192-ctr,aes128-ctr"
+    state: present
+  notify: Restart sshd
+
+- name: Set MACs for STIG audit
+  lineinfile:
+    path: /etc/crypto-policies/back-ends/openssh.config
+    regexp: "^MACs"
+    line: "MACs hmac-sha2-512,hmac-sha2-256"
+    state: present
+  notify: Restart sshd
+
+- name: Configure openssh CRYPTO_POLICY for STIG audit
+  lineinfile:
+    path: /etc/crypto-policies/back-ends/opensshserver.config
+    regexp: "^CRYPTO_POLICY"
+    line: "CRYPTO_POLICY='-oCiphers=aes256-ctr,aes192-ctr,aes128-ctr -oMACs=hmac-sha2-512,hmac-sha2-256 -oGSSAPIKeyExchange=no -oKexAlgorithms=ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521 -oHostKeyAlgorithms=ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,rsa-sha2-256,rsa-sha2-512 -oPubkeyAcceptedKeyTypes=ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,rsa-sha2-256,rsa-sha2-512 -oCASignatureAlgorithms=ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,rsa-sha2-256,rsa-sha2-512'"
+    state: present
+  notify: Restart sshd

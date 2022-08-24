@@ -13,5 +13,4 @@
   roles:
     - role: rhel8_fixes
     - role: RHEL8-STIG
-      tags: run_audit
 ...
