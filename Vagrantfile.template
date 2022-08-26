@@ -13,11 +13,11 @@ Vagrant.configure(2) do |config|
   config.vm.synced_folder ".""", "/vagrant", id: "vagrant-root", disabled: true
 
   config.vm.define 'rhel8' do |srv|
-    srv.vm.box = 'rhel8-disa-stig'
-    srv.vm.hostname = 'rhel8-disa-stig'
+    srv.vm.box = 'rhel/8'
+    srv.vm.hostname = 'rhel8-vm'
     srv.vm.network 'private_network', ip: '192.168.56.8'
     srv.vm.provider :virtualbox do |virtualbox|
-      virtualbox.name = 'rhel8'
+      virtualbox.name = 'rhel8-vm'
       virtualbox.gui = false
       virtualbox.customize ["modifyvm", :id, "--memory", 4096]
       virtualbox.customize ["modifyvm", :id,

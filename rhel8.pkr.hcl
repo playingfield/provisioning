@@ -41,7 +41,7 @@ source "virtualbox-iso" "rhel8" {
   vrdp_bind_address      = "0.0.0.0"
   vrdp_port_min          = "5900"
   vrdp_port_max          = "5900"
-  vm_name                = "rhel8-disa-stig"
+  vm_name                = "rhel8-vm"
 }
 
 build {

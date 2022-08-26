@@ -24,12 +24,12 @@ Vagrant.configure(2) do |config|
     }
   end
 
-  config.vm.define 'rhel8-disa-stig', autostart: true, primary: true do |rhel8|
-    rhel8.vm.box = 'rhel8-disa-stig'
-    rhel8.vm.hostname = 'rhel8-disa-stig'
+  config.vm.define 'rhel8-vm', autostart: true, primary: true do |rhel8|
+    rhel8.vm.box = 'rhel/8'
+    rhel8.vm.hostname = 'rhel8-vm'
     rhel8.vm.synced_folder ".", disabled: true
     rhel8.vm.provider :virtualbox do |virtualbox|
-      virtualbox.name = 'rhel8-disa-stig'
+      virtualbox.name = 'rhel8-vm'
       virtualbox.gui = false
       virtualbox.customize ["modifyvm", :id,
         "--boot1", "disk",
