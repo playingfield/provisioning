@@ -1,0 +1,7 @@
+---
+tmp_dir: /usr/local/tmp
+tower_name: ansible-tower-setup-3.8.6-2
+setup_bundle: "ansible-tower-setup-3.8.6-2.tar.gz"
+registry_username: "{{ lookup('env','RH_USER') }}"
+registry_password: "{{ lookup('env','RH_PASS') }}"
+...

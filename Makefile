@@ -16,7 +16,7 @@ output-rhel8/rhel8.box:
 
 virtualbox: output-rhel8/rhel8.box
 	vagrant box add --force --name rhel/8 output-rhel8/rhel8.box
-	vagrant up rhel8-vm
+	vagrant up
 
 image: output-rhel8/rhel8.box
 

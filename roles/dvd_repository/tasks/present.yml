@@ -44,3 +44,12 @@
   args:
     creates: /var/cache/dnf/packages.db
     warn: false
+
+- name: Create ansible.cfg
+  become: true
+  ansible.builtin.template:
+    src: ansible.cfg.j2
+    dest: "/root/.ansible.cfg"
+    mode: 0644
+  tags:
+    - tower

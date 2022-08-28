@@ -1,0 +1,117 @@
+---
+
+- name: install dependencies
+  ansible.builtin.package:
+    name:
+      - python3-cryptography
+      - python3-jinja2
+
+- name: Download setup_bundle
+  ansible.builtin.get_url:
+    url: "https://releases.ansible.com/ansible-tower/setup/{{ setup_bundle }}"
+    dest: '~'
+    mode: 0644
+  tags:
+    - tower
+
+- name: Unarchive setup_bundle
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: "~/{{ setup_bundle }}"
+    dest: "{{ tmp_dir }}"
+    creates: "{{ tmp_dir }}/{{ tower_name }}"
+  tags:
+    - tower
+
+- name: Create ansible.cfg
+  ansible.builtin.template:
+    src: "ansible.cfg.j2"
+    dest: "{{ tmp_dir }}/{{ tower_name }}/ansible.cfg"
+    mode: 0644
+  tags:
+    - tower
+
+- name: Create /var/log/tower directory
+  ansible.builtin.file:
+    path: /var/log/tower
+    mode: 0755
+    state: directory
+  tags:
+    - tower
+
+- name: Place inventory file for setup.sh
+  ansible.builtin.template:
+    src: inventory.j2
+    dest: "{{ tmp_dir }}/{{ tower_name }}/inventory"
+    mode: 0644
+  tags:
+    - tower
+    - setup
+
+- name: Declare variable for tower_state
+  ansible.builtin.set_fact:
+    tower_state: 'unknown'
+  tags:
+    - tower
+    - test
+
+- name: Check which services are running
+  no_log: true
+  ansible.builtin.service_facts:
+  tags:
+    - tower
+    - test
+
+- name: Set tower_state fact
+  ansible.builtin.set_fact:
+    tower_state: "{{ ansible_facts.services['ansible-tower.service']['state'] }}"
+  when: ansible_facts.services['ansible-tower.service'] is defined
+  tags:
+    - tower
+    - test
+
+- name: Running Tower setup.sh, time for a 15 minute break?
+  become: true
+  async: 3600
+  poll: 60
+  ansible.builtin.command: bash -lc "cd {{ tmp_dir }}/{{ tower_name }} && bash ./setup.sh"
+  when:
+    - role is defined
+    - tower_state == 'unknown'
+  tags:
+    - tower
+    - setup
+
+- name: Verify ports
+  ansible.builtin.wait_for:
+    port: "{{ item }}"
+  with_items:
+    - 80
+    - 443
+  tags:
+    - tower
+    - test
+
+- name: Check again which services are running
+  ansible.builtin.service_facts:
+  no_log: true
+  tags:
+    - tower
+    - test
+
+- name: Display supervisord state
+  ansible.builtin.debug:
+    var: ansible_facts.services['supervisord.service']
+  tags:
+    - tower
+    - test
+
+- name: Verify url
+  ansible.builtin.uri:
+    url: "https://{{ primary_machine }}/#/login"
+    validate_certs: "{{ tower_validate_certs }}"
+    status_code: 200
+  tags:
+    - tower
+    - test
+...
