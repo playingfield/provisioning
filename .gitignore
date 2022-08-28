@@ -1,5 +1,7 @@
 .vagrant/
 .vscode/
+.pytest_cache
 output-rhel8/
 roles/RHEL8-STIG
 roles/chrony
+files/
