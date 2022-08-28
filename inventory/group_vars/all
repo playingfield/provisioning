@@ -1,0 +1,27 @@
+# this is obviously for demo purposes.
+admin_password: 'IT-audited?'
+net_allow: []
+primary_machine: "{{ groups.tower[0] }}"
+secondary_machine: "{{ groups.automationhub[0] }}"
+pg_host: "{{ groups.database[0] }}"
+
+tower_package_name: 'automation-controller'
+tower_package_version: '4.0.0'
+tower_package_release: '1'
+
+automationhub_package_name: 'automation-hub'
+automationhub_package_version: '4.3.3'
+
+automation_platform_version: '2.0.1'
+automation_platform_channel: ansible-automation-platform-2.0-early-access-for-rhel-8-x86_64-rpms
+
+automation_platform_default_registry: registry.redhat.io
+automation_platform_default_namespace: ansible-automation-platform-20-early-access
+
+minimum_ansible_version: '2.11'
+munin_password: 'IT-audited?'
+vault_postgres_user: 'dba'
+vault_postgres_pass: 'Do_not_use_special_characters_in_pg_password_as_it_may_cause_the_setup_to_fail'
+pg_password: "{{ vault_postgres_pass }}"
+redis_password: 'IT-audited?'
+tower_validate_certs: false
