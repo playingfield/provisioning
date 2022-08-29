@@ -8,6 +8,14 @@
 
   roles:
     - dvd_repository
+    - grace_period
+
+- name: Provision AAP
+  hosts: automationhub|tower|database
+  become: true
+  gather_facts: true
+
+  roles:
     - ssh_keys
     - aap
 ...
