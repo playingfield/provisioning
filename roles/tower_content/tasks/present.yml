@@ -1,0 +1,79 @@
+# Tasks to reach desired state present
+---
+
+- name: Create organizations
+  tower_organization:
+    name: "{{ item.name }}"
+    description: "{{ item.description }}"
+    state: present
+    validate_certs: false
+  loop: "{{ tower_organizations }}"
+
+- name: Create inventory
+  tower_inventory:
+    name: "{{ item.name }} inventory"
+    description: "infrastructure"
+    organization: "{{ item.name }}"
+    state: present
+    validate_certs: false
+  loop: "{{ tower_organizations }}"
+
+- name: Populate inventory
+  tower_host:
+    name: "{{ item.host }}"
+    inventory: "{{ item.name }} inventory"
+    validate_certs: false
+    state: present
+  loop: "{{ tower_organizations }}"
+
+- name: Create groups
+  tower_group:
+    name: "{{ item.group }}"
+    inventory: "{{ item.name }} inventory"
+    state: present
+    hosts:
+      - "{{ item.host }}"
+    validate_certs: false
+  loop: "{{ tower_organizations }}"
+
+- name: Create projects
+  tower_project:
+    name: "{{ item.name }}"
+    organization: "{{ item.organization }}"
+    scm_type: git
+    scm_url: "{{ item.url }}"
+    validate_certs: false
+  loop: "{{ tower_projects }}"
+
+- name: Create machine credential
+  tower_credential:
+    name: 'Tower Credential'
+    credential_type: Machine
+    organization: "Tower"
+    inputs:
+      username: vagrant
+      ssh_key_data: "{{ lookup('file', '~/.vagrant.d/insecure_private_key') }}"
+    validate_certs: false
+
+- name: Create team
+  tower_team:
+    name: "Tower Team"
+    description: "Tower team"
+    organization: "Tower"
+    state: present
+    validate_certs: false
+
+- name: Create job template
+  tower_job_template:
+    name: "Vault Job Template"
+    project: tower_vault
+    inventory: "Tower inventory"
+    credential: 'Tower Credential'
+    playbook: playbooks/playbook.yml
+    validate_certs: false
+
+- name: Launch the Job Template
+  tower_job_launch:
+    job_template: "Vault Job Template"
+    validate_certs: false
+...

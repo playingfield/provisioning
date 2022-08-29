@@ -1,5 +1,10 @@
 ---
 
+- name: Configure kernel
+  sysctl:
+    name: user.max_user_namespaces
+    value: 31559
+    state: present
 
 - name: Install dependencies
   ansible.builtin.package:

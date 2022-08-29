@@ -11,11 +11,13 @@
     - grace_period
 
 - name: Provision AAP
-  hosts: automationhub|tower|database
+  hosts: server01,server02
   become: true
   gather_facts: true
 
   roles:
-    - ssh_keys
-    - aap
-...
+    - role: ssh_keys
+      tags: ssh_keys
+    - role: aap
+      tags: aap
+
