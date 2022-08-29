@@ -1,9 +1,0 @@
-# Tasks to converge to state absent
----
-- name: flush handlers
-  ansible.builtin.meta: flush_handlers
-
-- name: Remove package
-  ansible.builtin.package:
-    name: "{{ package }}"
-    state: absent
