@@ -8,7 +8,6 @@
 
   roles:
     - dvd_repository
-    - chrony
     - ssh_keys
     - aap
 ...
