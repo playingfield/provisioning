@@ -1,5 +1,9 @@
 ---
 tmp_dir: /usr/local/tmp
+tmp_mounts:
+  - { src: /dev/mapper/vgsys-lv_tmp, path: /tmp }
+  - { src: /dev/mapper/vgsys-lv_vartmp, path: /var/tmp }
+
 tower_name: ansible-tower-setup-3.8.6-2
 setup_bundle: "ansible-tower-setup-3.8.6-2.tar.gz"
 registry_username: "{{ lookup('env','RH_USER') }}"

@@ -1,6 +1,41 @@
 ---
+- name: Relax sshd for installation
+  ansible.builtin.lineinfile:
+    dest: /etc/ssh/sshd_config
+    line: "PermitRootLogin without-password"
+    state: present
+    regexp: '^PermitRootLogin'
+  notify:
+    - Restart sshd
 
-- name: install dependencies
+- name: Relax fapolicy for installation
+  ansible.builtin.lineinfile:
+    dest: /etc/fapolicyd/fapolicyd.conf
+    line: "permissive = 1"
+    state: present
+    regexp: '^permissive'
+  notify:
+    - Restart fapolicyd
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Relax mount options
+  ansible.builtin.mount:
+    src: "{{ item.src }}"
+    path: "{{ item.path }}"
+    fstype: xfs
+    state: mounted
+    opts: 'rw,nodev,nosuid'
+  loop: "{{ tmp_mounts }}"
+
+- name: Manage ansible tmp directory
+  ansible.builtin.file:
+    path: /usr/local/tmp/ansible
+    state: directory
+    mode: 01777
+
+- name: Install dependencies
   ansible.builtin.package:
     name:
       - python3-cryptography
@@ -82,36 +117,39 @@
     - tower
     - setup
 
-- name: Verify ports
-  ansible.builtin.wait_for:
-    port: "{{ item }}"
-  with_items:
-    - 80
-    - 443
-  tags:
-    - tower
-    - test
+- name: Wait for Tower to be ready
+  block:
+    - name: Verify ports
+      ansible.builtin.wait_for:
+        port: "{{ item }}"
+      with_items:
+        - 80
+        - 443
+      tags:
+        - tower
+        - test
 
-- name: Check again which services are running
-  ansible.builtin.service_facts:
-  no_log: true
-  tags:
-    - tower
-    - test
+    - name: Check again which services are running
+      ansible.builtin.service_facts:
+      no_log: true
+      tags:
+        - tower
+        - test
 
-- name: Display supervisord state
-  ansible.builtin.debug:
-    var: ansible_facts.services['supervisord.service']
-  tags:
-    - tower
-    - test
+    - name: Display supervisord state
+      ansible.builtin.debug:
+        var: ansible_facts.services['supervisord.service']
+      tags:
+        - tower
+        - test
 
-- name: Verify url
-  ansible.builtin.uri:
-    url: "https://{{ primary_machine }}/#/login"
-    validate_certs: "{{ tower_validate_certs }}"
-    status_code: 200
-  tags:
-    - tower
-    - test
+    - name: Verify url
+      ansible.builtin.uri:
+        url: "https://{{ primary_machine }}/#/login"
+        validate_certs: "{{ tower_validate_certs }}"
+        status_code: 200
+      tags:
+        - tower
+        - test
+  when: role is defined
 ...
