@@ -17,7 +17,7 @@
     state: present
 
 - name: Set Ciphers for STIG audit
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/crypto-policies/back-ends/openssh.config
     regexp: "^Ciphers"
     line: "Ciphers aes256-ctr,aes192-ctr,aes128-ctr"
@@ -25,7 +25,7 @@
   notify: Restart sshd
 
 - name: Set MACs for STIG audit
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/crypto-policies/back-ends/openssh.config
     regexp: "^MACs"
     line: "MACs hmac-sha2-512,hmac-sha2-256"
@@ -33,9 +33,10 @@
   notify: Restart sshd
 
 - name: Configure openssh CRYPTO_POLICY for STIG audit
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/crypto-policies/back-ends/opensshserver.config
     regexp: "^CRYPTO_POLICY"
+    # yamllint disable-line rule:line-length
     line: "CRYPTO_POLICY='-oCiphers=aes256-ctr,aes192-ctr,aes128-ctr -oMACs=hmac-sha2-512,hmac-sha2-256 -oGSSAPIKeyExchange=no -oKexAlgorithms=diffie-hellman-group-exchange-sha256,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512 -oHostKeyAlgorithms=ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521,ecdsa-sha2-nistp521-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-512-cert-v01@openssh.com -oPubkeyAcceptedKeyTypes=ecdsa-sha2-nistp256,ecdsa-sha2-nistp256-cert-v01@openssh.com,ecdsa-sha2-nistp384,ecdsa-sha2-nistp384-cert-v01@openssh.com,ecdsa-sha2-nistp521,ecdsa-sha2-nistp521-cert-v01@openssh.com,rsa-sha2-256,rsa-sha2-256-cert-v01@openssh.com,rsa-sha2-512,rsa-sha2-512-cert-v01@openssh.com -oCASignatureAlgorithms=ecdsa-sha2-nistp256,ecdsa-sha2-nistp384,ecdsa-sha2-nistp521,rsa-sha2-256,rsa-sha2-512'"
     state: present
   notify: Restart sshd
@@ -44,19 +45,19 @@
   ansible.builtin.meta: flush_handlers
 
 - name: 'Configure GnuTLS crypto facts for STIG audit'
-  set_fact:
+  ansible.builtin.set_fact:
     path: /etc/crypto-policies/back-ends/gnutls.config
     correct_value: +VERS-ALL:-VERS-DTLS0.9:-VERS-SSL3.0:-VERS-TLS1.0:-VERS-TLS1.1:-VERS-DTLS1.0
     lineinfile_reg: \+VERS-ALL:-VERS-DTLS0\.9:-VERS-SSL3\.0:-VERS-TLS1\.0:-VERS-TLS1\.1:-VERS-DTLS1\.0
 
 - name: 'Check if gnutls.config is present'
-  stat:
+  ansible.builtin.stat:
     path: '{{ path }}'
     follow: true
   register: gnutls_file
 
 - name: 'Configure GnuTLS crypto'
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: '{{ path }}'
     regexp: '{{ lineinfile_reg }}'
     line: '{{ correct_value }}'
@@ -68,7 +69,7 @@
 
     - name: 'Configure GnuTLS library to use DoD-approved TLS Encryption: Existing
         value check'
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: '{{ path }}'
         create: false
         regexp: '{{ lineinfile_reg }}'
@@ -78,7 +79,7 @@
       register: gnutls
 
     - name: 'Configure GnuTLS library to use DoD-approved TLS Encryption: Update'
-      replace:
+      ansible.builtin.replace:
         path: '{{ path }}'
         regexp: (\+VERS-ALL(?::-VERS-[A-Z]+\d\.\d)+)
         replace: '{{ correct_value }}'
@@ -86,7 +87,8 @@
   when: gnutls_file.stat.exists and gnutls_file.stat.size > correct_value|length
 
 - name: Update grub defaults and the bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="{{ item }}"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="{{ item }}"
+  changed_when: false  # grubby is idempotent
   loop:
     - audit=1
     - audit_backlog_limit=8192
@@ -96,13 +98,13 @@
     - slub_debug=P
 
 - name: Check if vagrant is a sudo user
-  stat:
+  ansible.builtin.stat:
     path: /etc/sudoers.d/vagrant
   register: vagrant_sudoers
 
 - name: Enforce a sudo password
   when: vagrant_sudoers.stat.exists
-  lineinfile:
+  ansible.builtin.lineinfile:
     path: /etc/sudoers.d/vagrant
     regexp: '^vagrant'
     line: 'vagrant ALL=(ALL) ALL'

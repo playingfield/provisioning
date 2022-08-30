@@ -15,17 +15,23 @@
   gather_facts: true
 
   tasks:
-    - ansible.builtin.include_role:
+    - name: Configure time
+      ansible.builtin.include_role:
         name: chrony
-    - ansible.builtin.include_role:
+    - name: Setup ssh keys for install
+      ansible.builtin.include_role:
         name: ssh_keys
-    - ansible.builtin.include_role:
+    - name: Relax settings for install
+      ansible.builtin.include_role:
         name: grace_period
         tasks_from: present
-    - ansible.builtin.include_role:
+    - name: Install Automation Platform
+      ansible.builtin.include_role:
         name: aap
-    - ansible.builtin.include_role:
+    - name: Enforce compliance settings
+      ansible.builtin.include_role:
         name: grace_period
         tasks_from: absent
-    - ansible.builtin.include_role:
+    - name: Improve compliance settings
+      ansible.builtin.include_role:
         name: rhel8_fixes

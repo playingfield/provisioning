@@ -4,5 +4,6 @@
 output-rhel8/
 roles/RHEL8-STIG
 roles/chrony
+roles/hudecof.grub-password
 files/
 collections/
