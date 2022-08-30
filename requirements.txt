@@ -7,6 +7,7 @@ ansible-navigator==2.1.0
 ansible-runner==2.2.1
 arrow==1.2.2
 attrs==22.1.0
+awxkit==21.5.0
 backports.zoneinfo==0.2.1
 binaryornot==0.4.4
 bindep==2.11.0

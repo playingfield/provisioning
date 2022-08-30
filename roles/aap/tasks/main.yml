@@ -1,39 +1,10 @@
 ---
-- name: Relax sshd for installation
-  ansible.builtin.lineinfile:
-    dest: /etc/ssh/sshd_config
-    line: "PermitRootLogin without-password"
+
+- name: Configure kernel
+  sysctl:
+    name: user.max_user_namespaces
+    value: 31559
     state: present
-    regexp: '^PermitRootLogin'
-  notify:
-    - Restart sshd
-
-- name: Relax fapolicy for installation
-  ansible.builtin.lineinfile:
-    dest: /etc/fapolicyd/fapolicyd.conf
-    line: "permissive = 1"
-    state: present
-    regexp: '^permissive'
-  notify:
-    - Restart fapolicyd
-
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
-
-- name: Relax mount options
-  ansible.builtin.mount:
-    src: "{{ item.src }}"
-    path: "{{ item.path }}"
-    fstype: xfs
-    state: mounted
-    opts: 'rw,nodev,nosuid'
-  loop: "{{ tmp_mounts }}"
-
-- name: Manage ansible tmp directory
-  ansible.builtin.file:
-    path: /usr/local/tmp/ansible
-    state: directory
-    mode: 01777
 
 - name: Install dependencies
   ansible.builtin.package:

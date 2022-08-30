@@ -16,7 +16,7 @@ Vagrant.configure(2) do |config|
   config.hostmanager.manage_guest = true
   config.hostmanager.ignore_private_ip = false
   config.hostmanager.include_offline = true
-  N = 2
+  N = 3
   (1..N).each do |server_id|
     config.vm.define "server0#{server_id}" do |server|
       server.vm.hostname = "server0#{server_id}"

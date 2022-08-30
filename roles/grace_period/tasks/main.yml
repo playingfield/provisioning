@@ -1,0 +1,3 @@
+---
+- name: "Converge state - {{ granted_exception }}"
+  ansible.builtin.include_tasks: "{{ granted_exception }}.yml"
