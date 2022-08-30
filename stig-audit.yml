@@ -21,5 +21,5 @@
       fetch:
         flat: true
         src: /tmp/report.html
-        dest: "~/Downloads/stig.html"
+        dest: "~/Downloads/{{ inventory_hostname }}.html"
 ...

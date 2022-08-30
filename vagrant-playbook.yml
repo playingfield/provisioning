@@ -8,16 +8,24 @@
 
   roles:
     - dvd_repository
-    - grace_period
 
 - name: Provision AAP
   hosts: server01,server02
   become: true
   gather_facts: true
 
-  roles:
-    - role: ssh_keys
-      tags: ssh_keys
-    - role: aap
-      tags: aap
-
+  tasks:
+    - ansible.builtin.include_role:
+        name: chrony
+    - ansible.builtin.include_role:
+        name: ssh_keys
+    - ansible.builtin.include_role:
+        name: grace_period
+        tasks_from: present
+    - ansible.builtin.include_role:
+        name: aap
+    - ansible.builtin.include_role:
+        name: grace_period
+        tasks_from: absent
+    - ansible.builtin.include_role:
+        name: rhel8_fixes

@@ -2,7 +2,9 @@
 
 - src: dockpack.base_nettime
   name: chrony
-  version: 2.1.1
+  version: 2.1.2
+
+- src: hudecof.grub-password
 
 #- src: https://github.com/bbaassssiiee/RHEL8-STIG.git
 #  scm: git

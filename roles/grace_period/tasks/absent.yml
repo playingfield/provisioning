@@ -2,16 +2,16 @@
 - name: Relax fapolicy for installation
   ansible.builtin.lineinfile:
     dest: /etc/fapolicyd/fapolicyd.conf
-    line: "permissive = 1"
+    line: "permissive = 0"
     state: present
     regexp: '^permissive'
   notify:
     - Restart fapolicyd
 
-- name: Relax sshd for installation
+- name: Disable SSH Root Login
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
-    line: "PermitRootLogin without-password"
+    line: "PermitRootLogin no"
     state: present
     regexp: '^PermitRootLogin'
   notify:
@@ -19,15 +19,6 @@
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
-
-- name: Relax mount options
-  ansible.builtin.mount:
-    src: "{{ item.src }}"
-    path: "{{ item.path }}"
-    fstype: xfs
-    state: mounted
-    opts: 'rw,nodev,nosuid'
-  loop: "{{ tmp_mounts }}"
 
 - name: Manage ansible tmp directory
   ansible.builtin.file:

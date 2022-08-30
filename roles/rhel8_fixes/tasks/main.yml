@@ -40,6 +40,9 @@
     state: present
   notify: Restart sshd
 
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
 - name: 'Configure GnuTLS crypto facts for STIG audit'
   set_fact:
     path: /etc/crypto-policies/back-ends/gnutls.config

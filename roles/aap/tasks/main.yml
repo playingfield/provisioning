@@ -88,6 +88,17 @@
     - tower
     - setup
 
+- name: Fix permissions on shared library directories
+  when: role is defined
+  ansible.builtin.file:
+    path: "{{ item }}"
+    group: root
+  loop:
+    - /lib64/redis
+    - /usr/lib64/redis
+    - /lib64/redis/modules
+    - /usr/lib64/redis/modules
+
 - name: Wait for Tower to be ready
   block:
     - name: Verify ports
