@@ -1,7 +1,9 @@
 ---
-
-tower_name: ansible-tower-setup-3.8.6-2
-setup_bundle: "ansible-tower-setup-3.8.6-2.tar.gz"
-registry_username: "{{ lookup('env','RH_USER') }}"
-registry_password: "{{ lookup('env','RH_PASS') }}"
+aap_repo_url: https://releases.ansible.com/ansible-tower/setup-bundle/
+aap_shasums: ansible-tower-setup-bundle-CHECKSUM
+aap_checksum_file_url: "{{ aap_repo_url ~ aap_shasums   }}"
+aap_tmp_dir: /usr/local/tmp/
+aap_setup_dir: ansible-tower-setup-bundle-3.8.6-2
+aap_setup_bundle: "{{ aap_setup_dir }}.tar.gz"
+aap_setup_download_url: "{{ aap_repo_url ~ aap_setup_bundle }}"
 ...

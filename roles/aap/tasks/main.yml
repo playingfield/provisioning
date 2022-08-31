@@ -12,34 +12,55 @@
       - python3-cryptography
       - python3-jinja2
 
-- name: Download setup_bundle
+- name: Check bundle checksum file
+  ansible.builtin.stat:
+    path: "{{ aap_tmp_dir ~ aap_shasums }}"
+  register: aap_checksum
+
+- name: Get bundle checksum file
   ansible.builtin.get_url:
-    url: "https://releases.ansible.com/ansible-tower/setup/{{ setup_bundle }}"
-    dest: '~'
-    mode: 0644
-  tags:
-    - tower
+    url: "{{ aap_checksum_file_url }}"
+    dest: "{{ aap_tmp_dir ~ aap_shasums }}"
+  tags: installation
+  when: not aap_checksum.stat.exists | bool
+
+- name: Get bundle checksum
+  ansible.builtin.shell: "grep {{ aap_setup_bundle }} {{ aap_tmp_dir ~ aap_shasums }}"
+  register: aap_sha256
+
+- name: Check bundle file
+  ansible.builtin.stat:
+    path: "{{ aap_tmp_dir ~  aap_setup_bundle }}"
+  register: aap_package
+
+- name: "Download setup bundle"
+  ansible.builtin.get_url:
+    url: "{{ aap_setup_download_url }}"
+    dest: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
+    checksum: "sha256:{{ aap_sha256.stdout.split(' ')|first }}"
+    timeout: "42"
+  when: not aap_package.stat.exists | bool
 
 - name: Unarchive setup_bundle
   ansible.builtin.unarchive:
     remote_src: true
-    src: "~/{{ setup_bundle }}"
-    dest: "{{ tmp_dir }}"
-    creates: "{{ tmp_dir }}/{{ tower_name }}"
+    src: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
+    dest: "{{ aap_tmp_dir }}"
+    creates: "{{ tmp_dir ~ aap_setup_dir }}"
   tags:
     - tower
 
 - name: Create ansible.cfg
   ansible.builtin.template:
     src: "ansible.cfg.j2"
-    dest: "{{ tmp_dir }}/{{ tower_name }}/ansible.cfg"
+    dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/ansible.cfg"
     mode: 0644
   tags:
     - tower
 
 - name: Create /var/log/tower directory
   ansible.builtin.file:
-    path: /var/log/tower
+    path: /var/log/tower/
     mode: 0755
     state: directory
   tags:
@@ -48,7 +69,7 @@
 - name: Place inventory file for setup.sh
   ansible.builtin.template:
     src: inventory.j2
-    dest: "{{ tmp_dir }}/{{ tower_name }}/inventory"
+    dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/inventory"
     mode: 0644
   tags:
     - tower
@@ -80,7 +101,7 @@
   become: true
   async: 3600
   poll: 60
-  ansible.builtin.command: bash -lc "cd {{ tmp_dir }}/{{ tower_name }} && bash ./setup.sh"
+  ansible.builtin.command: bash -lc "cd {{ aap_tmp_dir ~ aap_setup_dir }} && bash ./setup.sh"
   when:
     - role is defined
     - tower_state == 'unknown'
