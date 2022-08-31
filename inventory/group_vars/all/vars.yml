@@ -1,7 +1,6 @@
 tmp_dir: /usr/local/tmp
 tmp_mounts:
   - { src: /dev/mapper/vgsys-lv_tmp, path: /tmp }
-  - { src: /dev/mapper/vgsys-lv_vartmp, path: /var/tmp }
 
 # this is obviously for demo purposes.
 net_allow: []

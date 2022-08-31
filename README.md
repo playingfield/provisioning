@@ -22,7 +22,7 @@ These programs can be installed manually, or with `brew bundle`.
 ### Apps
 - Packer
 - VirtualBox
-- Vagrante
+- Vagrant
 
 ### Ansible
 run `source install.rc` in a terminal to create a Python virtualenv.
