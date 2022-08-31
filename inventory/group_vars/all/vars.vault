@@ -1,0 +1,4 @@
+admin_password: 'IT-audited?'
+munin_password: 'IT-audited?'
+vault_postgres_pass: 'Do_not_use_special_characters_in_pg_password_as_it_may_cause_the_setup_to_fail'
+redis_password: 'IT-audited?'

@@ -4,7 +4,6 @@ tmp_mounts:
   - { src: /dev/mapper/vgsys-lv_vartmp, path: /var/tmp }
 
 # this is obviously for demo purposes.
-admin_password: 'IT-audited?'
 net_allow: []
 primary_machine: "{{ groups.tower[0] }}"
 secondary_machine: "{{ groups.automationhub[0] }}"
@@ -24,9 +23,6 @@ automation_platform_default_registry: registry.redhat.io
 automation_platform_default_namespace: ansible-automation-platform-20-early-access
 
 minimum_ansible_version: '2.11'
-munin_password: 'IT-audited?'
 vault_postgres_user: 'dba'
-vault_postgres_pass: 'Do_not_use_special_characters_in_pg_password_as_it_may_cause_the_setup_to_fail'
 pg_password: "{{ vault_postgres_pass }}"
-redis_password: 'IT-audited?'
 tower_validate_certs: false
