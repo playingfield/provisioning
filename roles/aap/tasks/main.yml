@@ -25,7 +25,8 @@
   when: not aap_checksum.stat.exists | bool
 
 - name: Get bundle checksum
-  ansible.builtin.shell: "grep {{ aap_setup_bundle }} {{ aap_tmp_dir ~ aap_shasums }}"
+  ansible.builtin.command: "grep {{ aap_setup_bundle }} {{ aap_tmp_dir ~ aap_shasums }}"
+  changed_when: false
   register: aap_sha256
 
 - name: Check bundle file
@@ -37,7 +38,7 @@
   ansible.builtin.get_url:
     url: "{{ aap_setup_download_url }}"
     dest: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
-    checksum: "sha256:{{ aap_sha256.stdout.split(' ')|first }}"
+    checksum: "sha256:{{ aap_sha256.stdout.split(' ') | first }}"
     timeout: "42"
   when: not aap_package.stat.exists | bool
 
