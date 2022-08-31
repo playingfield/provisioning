@@ -1,8 +1,8 @@
 ---
-- name: Relax fapolicy for installation
+- name: Keep permissive mode in fapolicy
   ansible.builtin.lineinfile:
     dest: /etc/fapolicyd/fapolicyd.conf
-    line: "permissive = 0"
+    line: "permissive = 1"
     state: present
     regexp: '^permissive'
   notify:

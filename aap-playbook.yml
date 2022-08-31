@@ -2,7 +2,7 @@
 ---
 
 - name: Provision RHEL8 VM
-  hosts: all:!localhost
+  hosts: aap:!localhost
   become: true
   gather_facts: true
 
