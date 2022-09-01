@@ -2,36 +2,53 @@
 ---
 
 - name: Provision RHEL8 VM
-  hosts: aap:!localhost
+  hosts: all:!localhost
   become: true
   gather_facts: true
-
-  roles:
-    - dvd_repository
-
-- name: Provision AAP
-  hosts: server01,server02
-  become: true
-  gather_facts: true
-
-  tasks:
-    - name: Configure time
+  tags: [provision]
+  pre_tasks:
+    - name: Use RHEL8 ISO as Yum repo
       ansible.builtin.include_role:
-        name: chrony
-    - name: Setup ssh keys for install
-      ansible.builtin.include_role:
-        name: ssh_keys
+        name: dvd_repository
+
     - name: Relax settings for install
       ansible.builtin.include_role:
         name: grace_period
         tasks_from: present
+
+- name: Prepare AAP deployment
+  hosts: tower
+  become: true
+  gather_facts: true
+  tags: [prepare]
+  pre_tasks:
+    - name: Setup ssh keys for install
+      ansible.builtin.include_role:
+        name: ssh_keys
+
+- name: Deploy AAP
+  hosts: tower
+  become: true
+  gather_facts: true
+  tags: [deploy]
+  tasks:
     - name: Install Automation Platform
       ansible.builtin.include_role:
         name: aap
+
+- name: Compliance
+  hosts: aap
+  become: true
+  gather_facts: true
+  tags: [comply]
+  post_tasks:
     - name: Enforce compliance settings
       ansible.builtin.include_role:
         name: grace_period
         tasks_from: absent
+    - name: Configure time
+      ansible.builtin.include_role:
+        name: chrony
     - name: Improve compliance settings
       ansible.builtin.include_role:
         name: rhel8_fixes

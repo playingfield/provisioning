@@ -1,12 +1,21 @@
 ---
 
+- name: Ensure directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ aap_tmp_dir }}"
+    state: directory
+    mode: 0700
+
 - name: Configure kernel
-  sysctl:
+  become: true
+  ansible.builtin.sysctl:
     name: user.max_user_namespaces
     value: 31559
     state: present
 
 - name: Install dependencies
+  become: true
   ansible.builtin.package:
     name:
       - python3-cryptography
@@ -21,7 +30,6 @@
   ansible.builtin.get_url:
     url: "{{ aap_checksum_file_url }}"
     dest: "{{ aap_tmp_dir ~ aap_shasums }}"
-  tags: installation
   when: not aap_checksum.stat.exists | bool
 
 - name: Get bundle checksum
@@ -60,6 +68,7 @@
     - tower
 
 - name: Create /var/log/tower directory
+  become: true
   ansible.builtin.file:
     path: /var/log/tower/
     mode: 0755
@@ -102,6 +111,10 @@
   become: true
   async: 3600
   poll: 60
+  environment:
+    # yamllint disable-line rule:truthy
+    ANSIBLE_BECOME: True
+    ANSIBLE_BECOME_METHOD: sudo
   ansible.builtin.command: bash -lc "cd {{ aap_tmp_dir ~ aap_setup_dir }} && bash ./setup.sh"
   when:
     - role is defined
@@ -111,6 +124,7 @@
     - setup
 
 - name: Fix permissions on shared library directories
+  become: true
   when: role is defined
   ansible.builtin.file:
     path: "{{ item }}"

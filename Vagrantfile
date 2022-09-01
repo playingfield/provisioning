@@ -54,7 +54,7 @@ Vagrant.configure(2) do |config|
           ansible.inventory_path = "inventory"
           # Disable default limit to connect to all the servers
           ansible.limit = "all"
-          ansible.playbook = "vagrant-playbook.yml"
+          ansible.playbook = "aap-playbook.yml"
           ansible.galaxy_role_file = "roles/requirements.yml"
           ansible.galaxy_roles_path = "roles"
           ansible.verbose = ""

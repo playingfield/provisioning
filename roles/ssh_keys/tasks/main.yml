@@ -1,67 +1,27 @@
 ---
-
-- name: Create /root/.ssh directory
-  become: true
+- name: Ensure ssh directory
   ansible.builtin.file:
-    dest: /root/.ssh
-    mode: 0700
+    path: /root/.ssh
+    state: directory
     owner: root
     group: root
-    state: directory
-  tags:
-    - sshkeys
+    mode: 700
 
-- name: Generate ssh-key for root without passphrase!!!
-  delegate_to: localhost
-  connection: local
-  become: false
-  run_once: true
-  ansible.builtin.command: "ssh-keygen -b 4096 -f files/{{ ssh_key_name }}_rsa -t rsa -N '' -q -C tower"
-  args:
-    creates: "files/{{ ssh_key_name }}_rsa"
-  tags:
-    - sshkeys
-
-- name: Set ssh pub_key fact
-  ansible.builtin.set_fact:
-    pub_key: "files/{{ ssh_key_name }}_rsa.pub"
-  tags:
-    - sshkeys
-
-- name: Install authorized_keys for root
-  become: true
-  ansible.builtin.authorized_key:
-    user: root
-    state: present
-    key: "{{ lookup('file',pub_key) }}"
-  tags:
-    - sshkeys
-
-- name: Install private key for root
+- name: Install private key
   become: true
   ansible.builtin.copy:
-    src: "files/{{ ssh_key_name }}_rsa"
-    dest: /root/.ssh/
+    src: "{{ private_key }}"
+    dest: /root/.ssh/id_rsa
     mode: 0600
-  tags:
-    - sshkeys
 
-- name: Setup .ssh/config for root
+- name: Setup .ssh/config
   become: true
   ansible.builtin.template:
     src: config
     dest: /root/.ssh/config
     mode: 0600
-    owner: root
-    group: root
-  tags:
-    - sshkeys
 
 - name: Generate known host records
   become: true
   ansible.builtin.shell: ssh-keyscan -H {{ primary_machine }} {{ secondary_machine }} > /root/.ssh/known_hosts
   changed_when: true
-  tags:
-    - sshkeys
-
-...

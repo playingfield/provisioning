@@ -8,15 +8,6 @@
   notify:
     - Restart fapolicyd
 
-- name: Relax sshd for installation
-  ansible.builtin.lineinfile:
-    dest: /etc/ssh/sshd_config
-    line: "PermitRootLogin without-password"
-    state: present
-    regexp: '^PermitRootLogin'
-  notify:
-    - Restart sshd
-
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
 
@@ -29,10 +20,19 @@
     opts: 'rw,nodev,nosuid'
   loop: "{{ tmp_mounts }}"
 
-- name: Manage ansible tmp directory
+- name: Manage local tmp directory
+  become: true
   ansible.builtin.file:
-    path: /usr/local/tmp/ansible
+    path: /usr/local/tmp/
     owner: root
     group: root
     state: directory
     mode: 01777
+
+- name: Manage ansible tmp directory
+  become: true
+  ansible.builtin.file:
+    path: /usr/local/tmp/ansible
+    owner: "{{ ansible_user }}"
+    state: directory
+    mode: 01750
