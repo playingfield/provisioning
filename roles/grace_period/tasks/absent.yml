@@ -8,22 +8,5 @@
   notify:
     - Restart fapolicyd
 
-- name: Disable SSH Root Login
-  ansible.builtin.lineinfile:
-    dest: /etc/ssh/sshd_config
-    line: "PermitRootLogin no"
-    state: present
-    regexp: '^PermitRootLogin'
-  notify:
-    - Restart sshd
-
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
-
-- name: Manage ansible tmp directory
-  ansible.builtin.file:
-    path: /usr/local/tmp/ansible
-    owner: root
-    group: root
-    state: directory
-    mode: 01777

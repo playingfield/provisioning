@@ -131,9 +131,7 @@
     group: root
   loop:
     - /lib64/redis
-    - /usr/lib64/redis
     - /lib64/redis/modules
-    - /usr/lib64/redis/modules
 
 - name: Wait for Tower to be ready
   block:
