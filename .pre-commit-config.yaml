@@ -24,12 +24,6 @@ repos:
       - id: yamllint
         args: [-c=.yamllint]
 
-  - repo: https://github.com/ansible-community/ansible-lint.git
-    rev: v6.4.0
-    hooks:
-      - id: ansible-lint
-        files: \.yml$
-
   - repo: https://github.com/robertdebock/pre-commit
     rev: v1.2.2
     hooks:
