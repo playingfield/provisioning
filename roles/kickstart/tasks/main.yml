@@ -1,0 +1,88 @@
+---
+
+- name: Install kickstart file
+  become: true
+  ansible.builtin.template:
+    src: kickstart/ks.cfg
+    dest: "{{ ks_dir }}/rhel8.cfg"
+    owner: root
+    group: apache
+    mode: 0640
+
+- name: Install yum repo file
+  become: true
+  ansible.builtin.template:
+    src: yum.repo.j2
+    dest: "{{ ks_dir }}/rhel8.repo"
+    owner: root
+    group: apache
+    mode: 0640
+
+- name: Download RHEL 8 packages
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ item }}"
+    dest: "{{ download_folder }}/"
+  loop:
+    - "{{ rhel8_grub_url }}"
+    - "{{ rhel8_shim_url }}"
+
+- name: Extract the RHEL 8 packages
+  become: true
+  ansible.builtin.shell: |
+    set -o pipefail;
+    rpm2cpio {{ item }} | cpio -dimv
+  args:
+    chdir: "{{ download_folder }}"
+    creates: "{{ download_folder }}/boot/efi/EFI/redhat/shimx64.efi"
+  loop:
+    - "{{ rhel8_grub_rpm }}"
+    - "{{ rhel8_shim_rpm }}"
+
+- name: Create the netboot directories
+  become: true
+  ansible.builtin.file:
+    path: "{{ tftpboot_folder }}/rhel8"
+    state: directory
+    owner: root
+    group: tftpd
+    mode: 0755
+
+- name: Copy the EFI boot files
+  become: true
+  ansible.builtin.copy:
+    remote_src: true
+    src: "{{ download_folder }}/{{ item  }}"
+    dest: "{{ tftpboot_folder }}/{{ item | basename }}"
+    mode: 0555
+    group: tftpd
+  loop:
+    - boot/efi/EFI/BOOT/BOOTX64.EFI
+    - boot/efi/EFI/redhat/grubx64.efi
+
+- name: Install kernel
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ rhel8_baseurl }}/images/pxeboot/vmlinuz"
+    dest: "{{ tftpboot_folder }}/rhel8/"
+    owner: root
+    group: root
+    mode: 0555
+
+- name: Install initrd.img
+  become: true
+  ansible.builtin.get_url:
+    url: "{{ rhel8_baseurl }}/images/pxeboot/initrd.img"
+    dest: "{{ tftpboot_folder }}/rhel8/"
+    owner: root
+    group: root
+    mode: 0444
+
+- name: Install grub menu
+  become: true
+  ansible.builtin.template:
+    src: grub.cfg.j2
+    dest: "{{ tftpboot_folder }}/grub.cfg"
+    owner: root
+    group: tftpd
+    mode: 0644

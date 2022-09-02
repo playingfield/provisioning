@@ -1,0 +1,9 @@
+set default=0
+set timeout=60
+menuentry "Continue..." {
+    exit
+}
+menuentry 'Install RHEL8' {
+  linuxefi (tftp)rhel8/vmlinuz ip=dhcp inst.stage2=http://{{ kickstart_server}}/{{ rhel8_dir }} inst.lang=en_US inst.keymap=us inst.ks=http://{{ kickstart_server }}/kickstart/rhel8.cfg
+  initrdefi (tftp)rhel8/initrd.img
+}

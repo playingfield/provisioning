@@ -8,15 +8,14 @@ lint:
 
 clean: lint
 	@vagrant destroy -f
-	@vagrant box remove rhel/8 || /usr/bin/true
+	@vagrant box remove rhel/efi || /usr/bin/true
 	@rm -rf output-rhel8 .vagrant
 
 output-rhel8/rhel8.box:
 	packer build rhel8.pkr.hcl
 
-virtualbox: output-rhel8/rhel8.box
-	vagrant box add --force --name rhel/8 output-rhel8/rhel8.box
-	vagrant up
+box: output-rhel8/rhel8.box
+	vagrant box add --force --name rhel/efi output-rhel8/rhel8.box
 
 image: output-rhel8/rhel8.box
 

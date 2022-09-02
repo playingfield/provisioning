@@ -1,5 +1,29 @@
 ---
 
+- name: Determine IP address
+  ansible.builtin.set_fact:
+    # yamllint disable-line rule:line-length
+    kickstart_server: "{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
+
+- name: Create apache group
+  become: true
+  ansible.builtin.group:
+    name: apache
+    gid: 48
+    system: true
+    state: present
+
+- name: Create apache user
+  become: true
+  ansible.builtin.user:
+    name: apache
+    uid: 48
+    home: /usr/share/httpd
+    shell: /sbin/nologin
+    system: true
+    group: apache
+    state: present
+
 - name: See if mount directory exists
   ansible.builtin.stat:
     path: "{{ rhel8_mnt_dir }}"
@@ -13,34 +37,33 @@
     state: directory
     mode: 0755
 
-- name: Mount RHEL DVD
+# - name: Mount RHEL DVD
+#   become: true
+#   ansible.builtin.mount:
+#     path: "{{ rhel8_mnt_dir }}"
+#     src: /dev/sr0
+#     opts: ro,noauto,nodev,nosuid,noexec
+#     fstype: iso9660
+#     state: mounted
+#   tags:
+#    - notest
+
+- name: Mount RHEL ISO
   become: true
   ansible.builtin.mount:
     path: "{{ rhel8_mnt_dir }}"
-    src: /dev/sr0
-    opts: ro,noauto,nodev,nosuid,noexec
+    src: "{{ rhel8_iso_image }}"
+    opts: ro,loop,nodev
     fstype: iso9660
     state: mounted
   tags:
     - notest
 
-- name: Determine IP address
-  ansible.builtin.set_fact:
-    # yamllint disable-line rule:line-length
-    kickstart_server: "{{ hostvars[inventory_hostname].ansible_default_ipv4.address }}"
-
 - name: Install yum repo file
   become: true
   ansible.builtin.template:
-    src: redhat.repo.j2
-    dest: "/etc/yum.repos.d/redhat.repo"
+    src: dvd.repo.j2
+    dest: /etc/yum.repos.d/redhat.repo
     owner: root
     group: root
     mode: 0640
-
-- name: Yum clean all
-  become: true
-  ansible.builtin.command: yum clean all
-  args:
-    creates: /var/cache/dnf/packages.db
-    warn: false

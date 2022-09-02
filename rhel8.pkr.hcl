@@ -1,6 +1,6 @@
 variable "iso_url1" {
   type    = string
-  default = "file:///Users/Shared/rhel-8.5-x86_64-dvd.iso"
+  default = "file:///Users/Shared/provisioning/rhel-8.5-x86_64-dvd.iso"
 }
 
 variable "iso_url2" {
@@ -14,15 +14,22 @@ variable "iso_checksum" {
 }
 
 source "virtualbox-iso" "rhel8" {
-  boot_command           = ["<tab> text inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"]
+  boot_command   = [
+  "<wait>c<wait>",
+  "linuxefi /images/pxeboot/vmlinuz inst.stage2=hd:LABEL=RHEL-8-5-0-BaseOS-x86_64 inst.ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg quiet<enter>",
+  "initrdefi /images/pxeboot/initrd.img<enter>",
+  "boot<enter>"
+]
   boot_wait              = "5s"
   cpus                   = 2
   disk_size              = 65536
+  firmware               = "efi"
   gfx_controller         = "vmsvga"
   gfx_efi_resolution     = "1920x1080"
   gfx_vram_size          = "128"
   guest_os_type          = "RedHat_64"
-  guest_additions_mode   = "disable"
+  guest_additions_mode   = "upload"
+  guest_additions_path   = "/home/vagrant/VBoxGuestAdditions.iso"
   hard_drive_interface   = "sata"
   hard_drive_nonrotational = true
   headless               = true
@@ -37,6 +44,9 @@ source "virtualbox-iso" "rhel8" {
   ssh_username           = "vagrant"
   ssh_wait_timeout       = "10000s"
   rtc_time_base          = "UTC"
+  vboxmanage = [
+    [ "modifyvm", "{{.Name}}", "--firmware", "EFI" ],
+  ]
   virtualbox_version_file= ".vbox_version"
   vrdp_bind_address      = "0.0.0.0"
   vrdp_port_min          = "5900"
@@ -49,7 +59,7 @@ build {
 
   provisioner "shell" {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
-    scripts         = ["scripts/vagrant.sh", "scripts/cleanup.sh"]
+    scripts         = ["scripts/vagrant.sh", "scripts/vmtools.sh", "scripts/cleanup.sh"]
   }
   provisioner "ansible" {
     playbook_file = "./packer-playbook.yml"
