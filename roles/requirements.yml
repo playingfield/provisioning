@@ -5,8 +5,9 @@
   version: 2.1.2
 
 - src: hudecof.grub-password
+  name: grub_password
 
-#- src: https://github.com/bbaassssiiee/RHEL8-STIG.git
-#  scm: git
-#  name: RHEL8-STIG
-#  version: devel
+- src: https://github.com/bbaassssiiee/RHEL8-STIG.git
+  scm: git
+  name: RHEL8_STIG
+  version: devel
