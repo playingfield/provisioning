@@ -1,0 +1,58 @@
+---
+- name: Install apache
+  ansible.builtin.dnf:
+    name: httpd
+    state: present
+
+# Enable directory browsing in web server
+# This is a minimal change to the config:
+# Original line:
+#    Options -Indexes
+- name: Configure Apache Options Indexes
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf.d/welcome.conf
+    regexp: '    Options'
+    line: '    Options Indexes'
+    state: present
+    mode: 0644
+  notify: Restart apache
+
+- name: Configure Apache IndexIgnore
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/httpd/conf.d/autoindex.conf
+    regexp: '^IndexIgnore'
+    line: 'IndexIgnore *~ *# HEADER* README* .git RCS CVS *,v *,t'
+    state: present
+    mode: 0644
+  notify: Restart apache
+
+- name: Ensure firewalld is running
+  become: true
+  ansible.builtin.systemd:
+    name: firewalld
+    enabled: true
+    state: started
+  tags:
+    - apache
+
+- name: Allow webserver in firewalld
+  become: true
+  firewalld:
+    service: "{{ item }}"
+    immediate: true
+    permanent: true
+    state: enabled
+  loop:
+    - http
+    - https
+  tags:
+    - apache
+
+- name: Start apache web server
+  become: true
+  ansible.builtin.systemd:
+    name: httpd
+    enabled: true
+    state: started

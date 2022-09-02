@@ -1,0 +1,5 @@
+---
+rhel8_iso: rhel-8.5-x86_64-dvd.iso
+rhel8_iso_image: "{{ download_folder~rhel8_iso }}"
+rhel8_dir: rhel8-install
+rhel8_mnt_dir: "/var/www/html/{{ rhel8_dir }}"

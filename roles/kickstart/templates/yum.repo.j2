@@ -1,0 +1,22 @@
+[AppStream]
+name=Red Hat Enterprise Linux 8.5.0
+baseurl=http://{{ kickstart_server }}/rhel8-install/AppStream
+mediaid=None
+metadata_expire=-1
+gpgcheck=0
+cost=500
+enabled=True
+sslverify=0
+proxy=_none_
+
+
+[BaseOS]
+name=Red Hat Enterprise Linux 8.5.0
+baseurl=http://{{ kickstart_server }}/rhel8-install/BaseOS
+mediaid=None
+metadata_expire=-1
+gpgcheck=0
+cost=500
+enabled=True
+sslverify=0
+proxy=_none_

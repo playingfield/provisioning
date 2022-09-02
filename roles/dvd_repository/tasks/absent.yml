@@ -1,0 +1,34 @@
+---
+- name: See if mount directory exists
+  ansible.builtin.stat:
+    path: "{{ rhel8_mnt_dir }}"
+  register: mount_dir
+
+- name: Unmount RHEL ISO
+  when: not mount_dir.stat.exists
+  become: true
+  ansible.builtin.mount:
+    path: "{{ rhel8_mnt_dir }}"
+    src: "{{ rhel8_iso_image }}"
+    opts: ro,loop
+    fstype: iso9660
+    state: unmounted
+  tags:
+    - notest
+
+- name: Remove kickstart directory
+  become: true
+  ansible.builtin.file:
+    path: "{{ ks_dir }}"
+    state: absent
+
+- name: Remove the RHEL 8 package downloads
+  become: true
+  ansible.builtin.file:
+    state: absent
+    path: "{{ download_folder }}/{{ item }}"
+  loop:
+    - "{{ rhel8_grub_rpm }}"
+    - "{{ rhel8_shim_rpm }}"
+    - boot
+    - etc

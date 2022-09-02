@@ -1,3 +1,4 @@
 ---
-rhel8_mnt_dir: /mnt/rhel8
+download_folder: /vagrant/
+rhel8_iso: rhel-8.5-x86_64-dvd.iso
 desired_state: present
