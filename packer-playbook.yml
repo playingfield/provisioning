@@ -1,0 +1,17 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- hosts: all:!localhost
+  become: true
+  gather_facts: false
+  vars_files:
+    - stig-vars.yml
+
+  tasks:
+    - name: Hello ansible
+      ansible.builtin.debug:
+        msg: "Hello ansible"
+#  roles:
+#    - role: RHEL8_STIG
+
+...
