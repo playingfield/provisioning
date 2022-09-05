@@ -3,7 +3,7 @@
 
 - hosts: all:!localhost
   become: true
-  gather_facts: false
+  gather_facts: true
   vars_files:
     - stig-vars.yml
 
@@ -11,7 +11,5 @@
     - name: Hello ansible
       ansible.builtin.debug:
         msg: "Hello ansible"
-#  roles:
-#    - role: RHEL8_STIG
 
 ...

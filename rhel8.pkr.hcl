@@ -51,7 +51,9 @@ build {
     execute_command = "echo 'vagrant' | {{ .Vars }} sudo -S -E bash '{{ .Path }}'"
     scripts         = ["scripts/vagrant.sh", "scripts/cleanup.sh"]
   }
-
+  provisioner "ansible" {
+    playbook_file = "./packer-playbook.yml"
+  }
   post-processors {
     post-processor "vagrant" {
       keep_input_artifact  = true
