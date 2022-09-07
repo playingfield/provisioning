@@ -2,7 +2,8 @@
 .vscode/
 .pytest_cache
 output-rhel8/
-roles/RHEL8-STIG
+roles/RHEL8_STIG/
+roles/grub_password/
 roles/chrony
 roles/hudecof.grub-password
 files/
