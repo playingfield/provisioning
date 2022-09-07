@@ -1,5 +1,5 @@
 ---
-aap_version: 3.8.6-2
-aap_repo_url: https://releases.ansible.com/ansible-tower/setup/
-
+aap_version: '2.2.0-8'
+aap_repo_url: https://repo.internal/
+aap_checksum: 39c5f84421585fe0171fc0532d3507d195fc32bf5b74e53bfd4e9bcca7a0fcd0
 ...
