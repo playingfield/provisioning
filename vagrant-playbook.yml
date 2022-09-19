@@ -5,17 +5,50 @@
   hosts: all:!localhost
   become: true
   gather_facts: true
-  collections: community.general
+  tags: [provision]
+  pre_tasks:
+    - name: Use RHEL8 ISO as Yum repo
+      ansible.builtin.include_role:
+        name: dvd_repository
 
-  vars_files:
-    - stig-vars.yml
+    - name: Relax settings for install
+      ansible.builtin.include_role:
+        name: grace_period
+        tasks_from: present
 
-  roles:
-    - dvd_repository
- #   - apache
- #   - tftpd
- #   - kickstart
-    - chrony
-    - rhel8_fixes
-#    - role: RHEL8-STIG
-...
+- name: Prepare AAP deployment
+  hosts: tower
+  become: true
+  gather_facts: true
+  tags: [prepare]
+  pre_tasks:
+    - name: Setup ssh keys for install
+      ansible.builtin.include_role:
+        name: ssh_keys
+
+- name: Deploy AAP
+  hosts: tower
+  become: true
+  gather_facts: true
+  tags: [deploy]
+  tasks:
+    - name: Install Automation Platform
+      ansible.builtin.include_role:
+        name: aap
+
+- name: Compliance
+  hosts: aap
+  become: true
+  gather_facts: true
+  tags: [comply]
+  post_tasks:
+    - name: Enforce compliance settings
+      ansible.builtin.include_role:
+        name: grace_period
+        tasks_from: absent
+    - name: Configure time
+      ansible.builtin.include_role:
+        name: chrony
+    - name: Improve compliance settings
+      ansible.builtin.include_role:
+        name: rhel8_fixes
