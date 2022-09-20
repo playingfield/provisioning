@@ -8,6 +8,9 @@ lint:
 
 clean: lint
 	@vagrant destroy -f
+	@ssh-keygen -R 192.168.56.11
+	@ssh-keygen -R 192.168.56.12
+	@ssh-keygen -R 192.168.56.13
 	@vagrant box remove rhel/efi || /usr/bin/true
 	@rm -rf output-rhel8 .vagrant
 

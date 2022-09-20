@@ -7,3 +7,10 @@
     enabled: true
     daemon_reload: true
     masked: false
+
+- name: Enable usbguard
+  ansible.builtin.systemd:
+    name: usbguard
+    enabled: true
+    state: started
+    masked: false

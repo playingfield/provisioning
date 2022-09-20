@@ -9,16 +9,17 @@
   post_tasks:
 
     - name: 'Run the audit and create a report.'
-      command:
+      ansible.builtin.command:
         oscap xccdf eval \
           --report /tmp/report.html
           --profile stig
           /usr/share/xml/scap/ssg/content/ssg-rhel8-ds.xml
+      changed_when: true
       no_log: true
       ignore_errors: true
 
     - name: 'Fetch the report.'
-      fetch:
+      ansible.builtin.fetch:
         flat: true
         src: /tmp/report.html
         dest: "~/Downloads/{{ inventory_hostname }}.html"
