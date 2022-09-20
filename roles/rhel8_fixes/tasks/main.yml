@@ -109,3 +109,23 @@
     regexp: '^vagrant'
     line: 'vagrant ALL=(ALL) ALL'
     validate: 'visudo -cf %s'
+
+- name: Check that the /etc/usbguard/rules.conf exists
+  ansible.builtin.stat:
+    path: /etc/usbguard/rules.conf
+  register: policy_file
+
+- name: Create USBGuard policy
+  block:
+    - name: Generate policy
+      ansible.builtin.command: usbguard generate-policy
+      changed_when: false
+      register: policy
+
+    - name: Copy generated policy to rules.conf
+      ansible.builtin.copy:
+        content: '{{ policy.stdout }}'
+        dest: /etc/usbguard/rules.conf
+        mode: '0600'
+        notify: Enable usbguard
+  when: policy_file.stat.size | int == 0

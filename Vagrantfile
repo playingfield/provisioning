@@ -21,7 +21,7 @@ Vagrant.configure(2) do |config|
     config.vm.define "server0#{server_id}" do |server|
       server.vm.hostname = "server0#{server_id}"
       server.vm.network "private_network", ip: "192.168.56.1#{server_id}"
-      server.vm.synced_folder ".", "/vagrant", id: "vagrant-root", disabled: false
+      server.vm.synced_folder "/Users/Shared", "/vagrant", id: "vagrant-root", disabled: false
       server.vm.provider "virtualbox" do |virtualbox|
         virtualbox.name = "server0#{server_id}"
         virtualbox.gui = false
@@ -36,6 +36,8 @@ Vagrant.configure(2) do |config|
           "--cpus", 2,
           "--firmware", "EFI",
           "--memory", 8192,
+          "--usb", "on",
+          "--usbehci", "on",
           "--vrde", "on",
           "--graphicscontroller", "VMSVGA",
           "--vram", "64"

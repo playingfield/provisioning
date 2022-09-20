@@ -1,6 +1,6 @@
 variable "iso_url1" {
   type    = string
-  default = "file:///Users/Shared/provisioning/rhel-8.5-x86_64-dvd.iso"
+  default = "file:///Users/Shared/rhel-8.5-x86_64-dvd.iso"
 }
 
 variable "iso_url2" {
@@ -44,8 +44,10 @@ source "virtualbox-iso" "rhel8" {
   ssh_username           = "vagrant"
   ssh_wait_timeout       = "10000s"
   rtc_time_base          = "UTC"
+  usb                    = true
   vboxmanage = [
     [ "modifyvm", "{{.Name}}", "--firmware", "EFI" ],
+    [ "modifyvm", "{{.Name}}", "--usbehci", "true" ],
   ]
   virtualbox_version_file= ".vbox_version"
   vrdp_bind_address      = "0.0.0.0"

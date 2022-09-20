@@ -12,10 +12,10 @@
 
   roles:
     - dvd_repository
- #   - apache
- #   - tftpd
- #   - kickstart
+    - apache
+    - tftpd
+    - kickstart
     - chrony
     - rhel8_fixes
-#    - role: RHEL8-STIG
+    #  - role: RHEL8-STIG
 ...
