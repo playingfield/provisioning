@@ -24,7 +24,7 @@ pg_sslmode=prefer
 ee_images_tmp_dir=/usr/local/tmp/
 # Credentials for container registry to pull execution environment images from,
 # comment out registry_username if authentication is not required
-registry_url={{ groups.automationhub[0] }}
+registry_url={{ registry_url }}
 registry_username={{ registry_username }}
 registry_password={{ registry_password }}
 
