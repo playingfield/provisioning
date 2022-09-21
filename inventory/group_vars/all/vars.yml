@@ -1,28 +1,13 @@
+---
+# grace_period
 tmp_dir: /usr/local/tmp
 tmp_mounts:
   - { src: /dev/mapper/vgsys-lv_tmp, path: /tmp }
   - { src: /dev/mapper/vgsys-lv_vartmp, path: /var/tmp }
-
-# this is obviously for demo purposes.
+# nettime
 net_allow: []
-primary_machine: "{{ groups.tower[0] }}"
+
+primary_machine: "{{ groups.automationcontroller[0] }}"
 secondary_machine: "{{ groups.automationhub[0] }}"
-pg_host: "{{ groups.database[0] }}"
 
-tower_package_name: 'automation-controller'
-tower_package_version: '4.0.0'
-tower_package_release: '1'
-
-automationhub_package_name: 'automation-hub'
-automationhub_package_version: '4.3.3'
-
-automation_platform_version: '2.0.1'
-automation_platform_channel: ansible-automation-platform-2.0-early-access-for-rhel-8-x86_64-rpms
-
-automation_platform_default_registry: registry.redhat.io
-automation_platform_default_namespace: ansible-automation-platform-20-early-access
-
-minimum_ansible_version: '2.11'
-vault_postgres_user: 'dba'
-pg_password: "{{ vault_postgres_pass }}"
 tower_validate_certs: false

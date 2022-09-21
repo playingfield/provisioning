@@ -16,25 +16,52 @@
 
 - name: Install dependencies
   become: true
-  ansible.builtin.package:
+  ansible.builtin.dnf:
     name:
       - python3-cryptography
       - python3-jinja2
 
+- name: Check local bundle file
+  delegate_to: localhost
+  connection: local
+  become: false
+  run_once: true
+  ansible.builtin.stat:
+    path: "files/{{ aap_setup_bundle }}"
+  register: aap_local
+
 - name: Check bundle file
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
   ansible.builtin.stat:
     path: "{{ aap_tmp_dir ~  aap_setup_bundle }}"
   register: aap_package
 
+- name: "Copy setup bundle"
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
+  ansible.builtin.copy:
+    src: "{{ aap_setup_bundle }}"
+    dest: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
+  when:
+    - aap_local.stat.exists | bool
+    - not aap_package.stat.exists | bool
+
 - name: "Download setup bundle"
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
   ansible.builtin.get_url:
     url: "{{ aap_setup_download_url }}"
     dest: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
     checksum: "sha256:{{ aap_checksum }}"
     timeout: "42"
-  when: not aap_package.stat.exists | bool
+  when:
+    - not aap_local.stat.exists | bool
+    - not aap_package.stat.exists | bool
 
 - name: Unarchive setup_bundle
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
   ansible.builtin.unarchive:
     remote_src: true
     src: "{{ aap_tmp_dir ~ aap_setup_bundle }}"
@@ -42,6 +69,8 @@
     creates: "{{ tmp_dir ~ aap_setup_dir }}"
 
 - name: Create ansible.cfg
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
   ansible.builtin.template:
     src: "ansible.cfg.j2"
     dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/ansible.cfg"
@@ -55,6 +84,8 @@
     state: directory
 
 - name: Place inventory file for setup.sh
+  delegate_to: "{{ groups.automationcontroller[0] }}"
+  run_once: true
   ansible.builtin.template:
     src: inventory.j2
     dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/inventory"
@@ -62,7 +93,7 @@
 
 - name: Declare variable for tower_state
   ansible.builtin.set_fact:
-    tower_state: 'unknown'
+    aap_controller_state: 'unknown'
 
 - name: Check which services are running
   no_log: true
@@ -70,10 +101,10 @@
 
 - name: Set tower_state fact
   ansible.builtin.set_fact:
-    tower_state: "{{ ansible_facts.services['ansible-tower.service']['state'] }}"
-  when: ansible_facts.services['ansible-tower.service'] is defined
+    aap_controller_state: "{{ ansible_facts.services['automation-controller.service']['state'] }}"
+  when: ansible_facts.services['automation-controller.service'] is defined
 
-- name: Running Tower setup.sh, time for a 15 minute break?
+- name: Running AAP setup.sh, time for a 30 minute break?
   become: true
   async: 3600
   poll: 60
@@ -84,7 +115,7 @@
   ansible.builtin.command: bash -lc "cd {{ aap_tmp_dir ~ aap_setup_dir }} && bash ./setup.sh"
   when:
     - role is defined
-    - tower_state == 'unknown'
+    - aap_controller_state == 'unknown'
 
 - name: Fix permissions on shared library directories
   become: true
@@ -96,7 +127,7 @@
     - /lib64/redis
     - /lib64/redis/modules
 
-- name: Wait for Tower to be ready
+- name: Wait for Nginx to be ready
   block:
     - name: Verify ports
       ansible.builtin.wait_for:
@@ -113,9 +144,9 @@
       ansible.builtin.debug:
         var: ansible_facts.services['supervisord.service']
 
-    - name: Verify url
+    - name: Verify API URL
       ansible.builtin.uri:
-        url: "https://{{ primary_machine }}/#/login"
+        url: "https://{{ primary_machine }}/api"
         validate_certs: "{{ tower_validate_certs }}"
         status_code: 200
   when: role is defined

@@ -9,7 +9,7 @@
   become: true
 
 - name: Ensure group exists
-  group:
+  ansible.builtin.group:
     name: tftpd
     system: true
     local: true
@@ -17,7 +17,7 @@
   become: true
 
 - name: Ensure tftpd user exists
-  user:
+  ansible.builtin.user:
     name: tftpd
     group: tftpd
     home: /var/lib/tftpboot
@@ -32,7 +32,7 @@
   become: true
 
 - name: Create tftpboot home
-  file:
+  ansible.builtin.file:
     path: /var/lib/tftpboot
     state: directory
     # Note the sticky group bit
@@ -42,7 +42,7 @@
   become: true
 
 - name: Make sure {{ config_destination }} exists
-  file:
+  ansible.builtin.file:
     name: "{{ config_destination }}"
     state: directory
     mode: '0755'
@@ -51,14 +51,14 @@
   become: true
 
 - name: Override default TFTP server options
-  template:
+  ansible.builtin.template:
     src: override.conf.j2
     dest: "{{ config_destination }}/override.conf"
     mode: '0644'
   become: true
 
 - name: Enable TFTP activation socket
-  systemd:
+  ansible.builtin.systemd:
     name: tftp.socket
     enabled: true
     state: started

@@ -17,7 +17,7 @@
         tasks_from: present
 
 - name: Prepare AAP deployment
-  hosts: tower
+  hosts: aap
   become: true
   gather_facts: true
   tags: [prepare]
@@ -27,7 +27,7 @@
         name: ssh_keys
 
 - name: Deploy AAP
-  hosts: tower
+  hosts: aap
   become: true
   gather_facts: true
   tags: [deploy]
