@@ -1,5 +1,8 @@
-[tower]
-{{ groups.automationhub[0] }} connection=local ansible_host=localhost
+[automationcontroller]
+{{ groups.automationcontroller[0] }} connection=local ansible_host=localhost
+
+[automationhub]
+{{ groups.automationhub[0] }}
 
 [database]
 {{ groups.database[0] }}
@@ -12,29 +15,30 @@ admin_password={{ admin_password }}
 pg_host={{ groups.database[0] }}
 pg_port=5432
 
-pg_database='awx'
-pg_username='awx'
-pg_password={{ pg_password }}
-pg_sslmode='prefer'  # set to 'verify-full' for client-side enforced SSL
+pg_database=awx
+pg_username=awx
+pg_password={{ vault_postgres_pass }}
+pg_sslmode=prefer
 
 # Execution Environment Configuration
+ee_images_tmp_dir=/usr/local/tmp/
 # Credentials for container registry to pull execution environment images from,
 # comment out registry_username if authentication is not required
-registry_url='registry.redhat.io'
-registry_username='{{ registry_username |default(omit) }}'
-registry_password='{{ registry_password |default(omit) }}'
+registry_url={{ groups.automationhub[0] }}
+registry_username={{ registry_username }}
+registry_password={{ registry_password }}
 
 # Automation Hub Configuration
 #
 
-automationhub_admin_password={{ admin_password }}
+automationhub_admin_password={{ vault_hub_admin_pass }}
 
 automationhub_pg_host={{ groups.database[0] }}
 automationhub_pg_port=5432
 
 automationhub_pg_database='automationhub'
 automationhub_pg_username='automationhub'
-automationhub_pg_password={{ pg_password }}
+automationhub_pg_password={{ vault_hub_pg_pass }}
 automationhub_pg_sslmode='prefer'
 
 # By default if the automation hub package and its dependencies
