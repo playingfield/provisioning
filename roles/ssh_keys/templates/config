@@ -2,3 +2,4 @@ CheckHostIP no
 StrictHostKeyChecking no
 User {{ ansible_user }}
 ForwardAgent yes
+IdentityFile ~/.ssh/{{ ssh_keyname }}_rsa
