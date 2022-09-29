@@ -5,7 +5,7 @@
   ansible.builtin.file:
     path: "{{ aap_tmp_dir }}"
     state: directory
-    mode: 0700
+    mode: 01777
 
 - name: Configure kernel
   become: true
