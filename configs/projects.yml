@@ -1,0 +1,11 @@
+---
+controller_projects:
+  - name: Hashicorp Vault Demo
+    scm_type: git
+    scm_url: https://github.com/dockpack/tower_vault.git
+    scm_branch: main
+    scm_clean: true
+    description: Hashicorp Vault Demo
+    organization: Research & Development
+    wait: true
+    update: true

@@ -1,0 +1,4 @@
+---
+controller_settings:
+  settings:
+    AWX_ISOLATION_BASE_PATH: /usr/local/tmp

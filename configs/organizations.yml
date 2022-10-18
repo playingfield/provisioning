@@ -1,0 +1,6 @@
+---
+controller_organizations:
+  - name: Marketing
+  - name: Manufacturing
+  - name: Distribution
+  - name: Research & Development
