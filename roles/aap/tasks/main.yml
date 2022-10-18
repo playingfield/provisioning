@@ -68,20 +68,13 @@
     dest: "{{ aap_tmp_dir }}"
     creates: "{{ aap_tmp_dir ~ aap_setup_dir }}"
 
-- name: Create ansible.cfg
+- name: Create ansible.cfg for setup.sh
   delegate_to: "{{ groups.automationcontroller[0] }}"
   run_once: true
   ansible.builtin.template:
     src: "ansible.cfg.j2"
     dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/ansible.cfg"
     mode: 0644
-
-- name: Create /var/log/tower directory
-  become: true
-  ansible.builtin.file:
-    path: /var/log/tower/
-    mode: 0755
-    state: directory
 
 - name: Place inventory file for setup.sh
   delegate_to: "{{ groups.automationcontroller[0] }}"
@@ -91,7 +84,14 @@
     dest: "{{ aap_tmp_dir ~ aap_setup_dir }}/inventory"
     mode: 0644
 
-- name: Declare variable for tower_state
+- name: Create log directory
+  become: true
+  ansible.builtin.file:
+    path: /var/log/tower/
+    mode: 0755
+    state: directory
+
+- name: Declare variable aap_controller_state
   ansible.builtin.set_fact:
     aap_controller_state: 'unknown'
 
@@ -99,7 +99,7 @@
   no_log: true
   ansible.builtin.service_facts:
 
-- name: Set tower_state fact
+- name: Set aap_controller_state fact
   ansible.builtin.set_fact:
     aap_controller_state: "{{ ansible_facts.services['automation-controller.service']['state'] }}"
   when: ansible_facts.services['automation-controller.service'] is defined
@@ -147,7 +147,8 @@
     - name: Verify API URL
       ansible.builtin.uri:
         url: "https://{{ primary_machine }}/api"
-        validate_certs: "{{ tower_validate_certs }}"
+        validate_certs: "{{ aap_validate_certs }}"
         status_code: 200
   when: role is defined
+
 ...

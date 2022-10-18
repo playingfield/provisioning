@@ -9,4 +9,5 @@ net_allow: []
 primary_machine: "{{ groups.automationcontroller[0] }}"
 secondary_machine: "{{ groups.automationhub[0] }}"
 registry_url: 192.168.56.12.nip.io
-tower_validate_certs: false
+aap_validate_certs: false
+ansible_user: vagrant
