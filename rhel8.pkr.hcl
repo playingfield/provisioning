@@ -47,7 +47,7 @@ source "virtualbox-iso" "rhel8" {
   usb                    = true
   vboxmanage = [
     [ "modifyvm", "{{.Name}}", "--firmware", "EFI" ],
-    [ "modifyvm", "{{.Name}}", "--usbehci", "true" ],
+    [ "modifyvm", "{{.Name}}", "--usbehci", "on" ],
   ]
   virtualbox_version_file= ".vbox_version"
   vrdp_bind_address      = "0.0.0.0"

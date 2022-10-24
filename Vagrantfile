@@ -18,12 +18,12 @@ Vagrant.configure(2) do |config|
   config.hostmanager.include_offline = true
   N = 3
   (1..N).each do |server_id|
-    config.vm.define "server0#{server_id}" do |server|
-      server.vm.hostname = "server0#{server_id}"
+    config.vm.define "192.168.56.1#{server_id}" do |server|
+      server.vm.hostname = "192.168.56.1#{server_id}.nip.io"
       server.vm.network "private_network", ip: "192.168.56.1#{server_id}"
       server.vm.synced_folder "/Users/Shared", "/vagrant", id: "vagrant-root", disabled: false
       server.vm.provider "virtualbox" do |virtualbox|
-        virtualbox.name = "server0#{server_id}"
+        virtualbox.name = "192.168.56.1#{server_id}.nip.io"
         virtualbox.gui = false
         # Boot order setting is ignored if EFI is enabled
         # https://www.virtualbox.org/ticket/19364

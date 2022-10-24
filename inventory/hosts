@@ -11,13 +11,13 @@ automationhub
 automationcontroller
 
 [database]
-server01 ansible_ssh_host=192.168.56.10.nip.io
+192.168.56.11.nip.io
 
 [automationhub]
-server02 ansible_ssh_host=192.168.56.12.nip.io
+192.168.56.12.nip.io
 
 [automationcontroller]
-server01 ansible_ssh_host=192.168.56.11.nip.io role=primary
+192.168.56.11.nip.io role=primary
 
 [other]
-server03 ansible_ssh_host=192.168.56.13.nip.io
+192.168.56.13.nip.io

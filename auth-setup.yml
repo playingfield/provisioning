@@ -12,12 +12,8 @@
     cfg: "-k --conf.host https://{{ awx_host }} --conf.user {{ awx_user | default('admin', true) }}"
 
   pre_tasks:
-    - name: Install collections
-      changed_when: true
-      # yamllint disable-line rule:line-length
-      ansible.builtin.command: "ansible-galaxy collection install -f -p collections -r collections/requirements.yml"
 
-    - name: Login to Tower
+    - name: Login to controller
       no_log: false
       changed_when: false
       ansible.builtin.command: "awx {{ cfg }} --conf.password {{ admin_password }} -k login"

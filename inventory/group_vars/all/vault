@@ -4,5 +4,5 @@ vault_postgres_pass: 'Do_not_use_special_characters_in_pg_password_as_it_may_cau
 vault_hub_admin_pass: 'IT-audited?'
 vault_hub_pg_pass: 'database_password'
 redis_password: 'IT-audited?'
-registry_username: registry_user
-registry_password: registry_password
+registry_username: "{{ lookup('env','RHN_USER') }}"
+registry_password: "{{ lookup('env','RHN_PASS') }}"
