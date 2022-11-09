@@ -46,7 +46,7 @@
       changed_when: true
       # yamllint disable-line rule:line-length
       ansible.builtin.command: "ansible-galaxy collection install -r collections/requirements.yml"
-    
+
 - name: Configure Ansible Controller post installation
   hosts: localhost
   connection: local
@@ -60,11 +60,10 @@
       ansible.builtin.include_vars:
         dir: ./configs
         extensions: ["yml"]
-        ignore_files: [controller_auth.yml]
       no_log: true
       tags:
         - always
-        
+
     - name: Wait for Controller to come up
       ansible.builtin.uri:
         url: "https://{{ controller_hostname }}/api/v2/ping"
@@ -83,6 +82,6 @@
 
     - name: Update token
       ansible.builtin.include_tasks: tasks/get_token.yml
-      
+
   roles:
     - dispatch  # The dispatch role calls all of the other roles.
