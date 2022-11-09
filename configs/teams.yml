@@ -1,14 +1,5 @@
 ---
 controller_teams:
-  - name: Operators
-    organization: Marketing
-  - name: Operators
-    organization: Distribution
-  - name: Developers
-    organization: Marketing
-  - name: Developers
-    organization: Distribution
   - name: Administrators
-    organization: Marketing
-  - name: Administrators
-    organization: Distribution
+    organization: Platform
+

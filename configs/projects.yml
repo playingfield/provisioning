@@ -6,6 +6,6 @@ controller_projects:
     scm_branch: main
     scm_clean: true
     description: Hashicorp Vault Demo
-    organization: Research & Development
+    organization: Platform
     wait: true
     update: true
