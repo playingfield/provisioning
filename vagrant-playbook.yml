@@ -60,6 +60,7 @@
       ansible.builtin.include_vars:
         dir: ./configs
         extensions: ["yml"]
+        ignore_files: [controller_auth.yml]
       no_log: true
       tags:
         - always
