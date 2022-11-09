@@ -36,49 +36,34 @@
       ansible.builtin.include_role:
         name: aap
 
-- name: Configure Local Authentication
+- name: Configure Local Collections
   hosts: localhost
   become: false
   gather_facts: false
-
-  vars:
-    awx_host: "{{ groups.automationcontroller[0] }}"
-    # yamllint disable-line rule:line-length
-    cfg: "-k --conf.host https://{{ awx_host }} --conf.user {{ awx_user | default('admin', true) }}"
 
   pre_tasks:
     - name: Install collections
       changed_when: true
       # yamllint disable-line rule:line-length
       ansible.builtin.command: "ansible-galaxy collection install -r collections/requirements.yml"
-
-    - name: Login to Tower
-      no_log: false
-      changed_when: false
-      ansible.builtin.command: "awx {{ cfg }} --conf.password {{ admin_password }} -k login"
-      register: awx_login
-
-    - name: Set awx_token
-      ansible.builtin.set_fact:
-        awx_token: "{{ awx_login.stdout | from_json | json_query('token') }}"
-
-    - name: Create ~/.tower_cli.cfg
-      ansible.builtin.template:
-        src: tower_cli.cfg
-        dest: "~/.tower_cli.cfg"
-        mode: 0600
-
+    
 - name: Configure Ansible Controller post installation
   hosts: localhost
   connection: local
-  vars_files:
-    - configs/controller_auth.yml
   collections:
     - awx.awx
     - redhat_cop.controller_configuration
 
   pre_tasks:
 
+    - name: Include vars from configs directory
+      ansible.builtin.include_vars:
+        dir: ./configs
+        extensions: ["yml"]
+      no_log: true
+      tags:
+        - always
+        
     - name: Wait for Controller to come up
       ansible.builtin.uri:
         url: "https://{{ controller_hostname }}/api/v2/ping"
@@ -87,7 +72,7 @@
       register: result
       until: result.status == 200
       retries: 20
-      delay: 30
+      delay: 3
       ignore_errors: true
 
     - name: Sleep for 10 seconds and allow awx to come up.
@@ -95,13 +80,8 @@
         timeout: 10
       delegate_to: localhost
 
-    - name: Include vars from configs directory
-      ansible.builtin.include_vars:
-        dir: ./configs
-        ignore_files: [controller_auth.yml]
-        extensions: ["yml"]
-      tags:
-        - always
-
+    - name: Update token
+      ansible.builtin.include_tasks: tasks/get_token.yml
+      
   roles:
     - dispatch  # The dispatch role calls all of the other roles.
