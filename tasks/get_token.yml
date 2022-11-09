@@ -1,0 +1,29 @@
+---
+
+- name: Create a new token using username/password
+  token:
+    description: Platform Token
+    scope: "write"
+    state: present
+    controller_host: "https://{{ controller_hostname }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    validate_certs: false
+
+- name: Use our new token to make another call
+  job_list:
+    controller_host: "https://{{ controller_hostname }}"
+    controller_oauthtoken: "{{ controller_token.token }}"
+    validate_certs: false
+
+- name: Set aap_token
+  no_log: true
+  ansible.builtin.set_fact:
+    controller_token: "{{ controller_token.token }}"
+
+- name: Create ~/.tower_cli.cfg
+  no_log: true
+  ansible.builtin.template:
+    src: tower_cli.cfg
+    dest: "~/.tower_cli.cfg"
+    mode: 0600
