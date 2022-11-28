@@ -1,5 +1,10 @@
 ---
 
+- name: Remove stale ~/.tower_cli.cfg
+  ansible.builtin.file:
+    state: absent
+    path: ~/.tower_cli.cfg
+
 - name: Create a new token using username/password
   token:
     description: Platform Token
@@ -22,8 +27,48 @@
     controller_token: "{{ controller_token.token }}"
 
 - name: Create ~/.tower_cli.cfg
-  no_log: true
+  no_log: false
   ansible.builtin.template:
-    src: tower_cli.cfg
+    src: tower_cli.cfg.j2
     dest: "~/.tower_cli.cfg"
     mode: 0600
+
+- name: Install licence
+  ansible.controller.license:
+    controller_host: "{{ groups.automationcontroller[0] }}"
+    controller_username: "{{ controller_username }}"
+    controller_password: "{{ controller_password }}"
+    manifest: "{{ playbook_dir }}/files/manifest.zip"
+    validate_certs: false
+
+- name: Remove Demo Credential
+  ansible.controller.credential:
+    credential_type: Machine
+    name: Demo Credential
+    state: absent
+  failed_when: false
+
+- name: Remove Demo Job Template
+  ansible.controller.job_template:
+    name: Demo Job Template
+    state: absent
+  failed_when: false
+
+- name: Remove Demo Project
+  ansible.controller.project:
+    name: Demo Project
+    state: absent
+  failed_when: false
+
+- name: Remove Demo Inventory
+  ansible.controller.inventory:
+    name: Demo Inventory
+    organization: Default
+    state: absent
+  failed_when: false
+
+- name: Remove Default Organization
+  ansible.controller.organization:
+    name: Default
+    state: absent
+  failed_when: false

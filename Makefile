@@ -22,4 +22,5 @@ box: output-rhel8/rhel8.box
 
 image: output-rhel8/rhel8.box
 
-all: clean virtualbox
+all: clean box
+	vagrant up

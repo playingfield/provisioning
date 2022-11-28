@@ -8,7 +8,7 @@ ansible-runner==2.2.1
 arrow==1.2.2
 attrs==22.1.0
 awxkit==21.5.0
-backports.zoneinfo==0.2.1
+backports.zoneinfo==0.2.1;python_version<"3.9"
 binaryornot==0.4.4
 bindep==2.11.0
 bracex==2.3.post1

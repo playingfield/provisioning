@@ -4,4 +4,4 @@ controller_hostname: 192.168.56.11.nip.io
 controller_validate_certs: false
 controller_username: admin
 controller_password: 'IT-audited?'
-controller_validate_certs: false
+

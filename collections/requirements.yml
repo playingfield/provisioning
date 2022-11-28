@@ -1,6 +1,8 @@
 ---
 collections:
-  - name: awx.awx
+  - name: ansible.controller
+    type: file
+    source: files/ansible-controller-4.3.0.tar.gz
   - name: ansible.posix
   - name: community.general
   - name: redhat_cop.controller_configuration

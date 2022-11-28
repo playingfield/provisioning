@@ -1,12 +1,13 @@
 # Provisioning
 
-We create an image with Hashicorp Packer and then use it to create a VM with Vagrant.
+We create an image with Hashicorp Packer and then use it to create VMs with Vagrant. The VMs run Ansible Automation Platform.
 
 `make all`
 
-All you need is to download the RHEL 8.5 ISO and put it in /Users/Shared/rhel-8.5-x86_64-dvd.iso or be logged in to the Red Hat Customer Portal and have the ISO downloaded.
+You need to download the RHEL 8.5 ISO and put it in /Users/Shared/rhel-8.5-x86_64-dvd.iso or be logged in to the Red Hat Customer Portal and have the ISO downloaded.
+You also need to download the bundle installer for AAP and the ansible.controller collection from Red Hat.
 
-## Packer will create a DISA-STIG compliant image
+## Packer will create a DISA-STIG compliant image.
 
 `make image`
 

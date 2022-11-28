@@ -20,10 +20,10 @@
     opts: 'rw,nodev,nosuid'
   loop: "{{ tmp_mounts }}"
 
-- name: Manage local tmp directory
+- name: Manage tmp directory
   become: true
   ansible.builtin.file:
-    path: /usr/local/tmp/
+    path: var/tmp/
     owner: root
     group: root
     state: directory
@@ -32,7 +32,7 @@
 - name: Manage ansible tmp directory
   become: true
   ansible.builtin.file:
-    path: /usr/local/tmp/ansible
+    path: /var/tmp/ansible
     owner: "{{ ansible_user }}"
     state: directory
     mode: 01750

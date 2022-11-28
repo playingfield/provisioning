@@ -1,7 +1,9 @@
 ---
 controller_settings:
   settings:
-    AWX_ISOLATION_BASE_PATH: /usr/local/tmp
+    AWX_ISOLATION_BASE_PATH: /var/tmp
+    AWX_COLLECTIONS_ENABLED: true
+    AWX_ROLES_ENABLED: true
     ORG_ADMINS_CAN_SEE_ALL_USERS: true
     MANAGE_ORGANIZATION_AUTH: false
     AD_HOC_COMMANDS:

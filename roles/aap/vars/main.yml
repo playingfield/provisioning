@@ -1,5 +1,5 @@
 ---
-aap_tmp_dir: /usr/local/tmp/
+aap_tmp_dir: /var/tmp/
 aap_setup_dir: "ansible-automation-platform-setup-bundle-{{ aap_version }}"
 aap_setup_bundle: "{{ aap_setup_dir }}.tar.gz"
 aap_setup_download_url: "{{ aap_repo_url ~ aap_setup_bundle }}"

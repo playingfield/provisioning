@@ -50,6 +50,7 @@
 - name: Configure Ansible Controller post installation
   hosts: localhost
   connection: local
+  tags: [configure]
   collections:
     - awx.awx
     - redhat_cop.controller_configuration
