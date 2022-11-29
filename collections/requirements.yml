@@ -5,4 +5,7 @@ collections:
     source: files/ansible-controller-4.3.0.tar.gz
   - name: ansible.posix
   - name: community.general
-  - name: redhat_cop.controller_configuration
+  - name: infra.controller_configuration
+  - name: infra.ah_configuration
+  - name: infra.aap_utilities
+  - name: infra.ee_utilities
