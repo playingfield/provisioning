@@ -40,6 +40,7 @@
   hosts: localhost
   become: false
   gather_facts: false
+  tags: [local]
 
   pre_tasks:
     - name: Install collections
@@ -53,13 +54,13 @@
   tags: [configure]
   collections:
     - awx.awx
-    - redhat_cop.controller_configuration
+    - infra.controller_configuration
 
   pre_tasks:
 
     - name: Include vars from configs directory
       ansible.builtin.include_vars:
-        dir: ./configs
+        dir: group_vars/controller
         extensions: ["yml"]
       no_log: true
       tags:
