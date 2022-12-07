@@ -64,9 +64,9 @@ Vagrant.configure(2) do |config|
           ansible.galaxy_roles_path = "roles"
           ansible.verbose = ""
           ansible.groups = {
-            "database" => ["server01"],
-            "automationhub" => ["server02"],
-            "tower" => ["server01"]
+            "aap" => ["192.168.56.11, 192.168.56.12"],
+            "database" => ["192.168.56.11"],
+            "automationhub" => ["192.168.56.12"]
           }
         end
       end
