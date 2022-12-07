@@ -7,9 +7,6 @@
   gather_facts: true
   collections: community.general
 
-  vars_files:
-    - stig-vars.yml
-
   roles:
     - dvd_repository
     - apache
@@ -17,5 +14,4 @@
     - kickstart
     - chrony
     - rhel8_fixes
-    #  - role: RHEL8-STIG
 ...

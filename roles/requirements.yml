@@ -4,7 +4,7 @@
   name: chrony
   version: 2.1.2
 
-- src: https://github.com/bbaassssiiee/RHEL8-STIG.git
+- src: https://github.com/ansible-lockdown/RHEL8-STIG.git
   scm: git
   name: RHEL8_STIG
   version: devel
