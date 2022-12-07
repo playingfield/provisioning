@@ -1,5 +1,0 @@
----
-# Main tasks entry point for the role
-
-- name: "Converge state - {{ desired_state }}"
-  ansible.builtin.include_tasks: "{{ desired_state }}.yml"
