@@ -40,4 +40,3 @@
     controller_password: "{{ controller_password }}"
     manifest: "{{ playbook_dir }}/files/manifest.zip"
     validate_certs: false
-

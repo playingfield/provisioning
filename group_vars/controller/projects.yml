@@ -1,0 +1,10 @@
+---
+controller_projects:
+  - name: Vault
+    organization: Platform
+    scm_branch: main
+    scm_clean: false
+    scm_delete_on_update: false
+    scm_type: git
+    scm_update_on_launch: false
+    scm_url: https://github.com/dockpack/tower_vault.git

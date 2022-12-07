@@ -1,0 +1,9 @@
+---
+controller_templates:
+  - name: Deploy Hashicorp Vault
+    job_type: run
+    inventory: Vault
+    project: Vault
+    playbook: playbooks/playbook.yml
+    credentials:
+      - Vagrant

@@ -1,0 +1,11 @@
+---
+controller_inventory_sources:
+  - name: Vault
+    source: scm
+    source_project: Vault
+    source_path: inventory
+    inventory: Vault
+    credential: Vagrant
+    overwrite: true
+    update_on_launch: false
+    update_cache_timeout: 0
