@@ -85,5 +85,8 @@
     - name: Update token
       ansible.builtin.include_tasks: tasks/get_token.yml
 
+    - name: Remove Demo content
+      ansible.builtin.include_tasks: tasks/delete_demo.yml
+
   roles:
     - dispatch  # The dispatch role calls all of the other roles.

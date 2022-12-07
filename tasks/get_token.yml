@@ -41,34 +41,3 @@
     manifest: "{{ playbook_dir }}/files/manifest.zip"
     validate_certs: false
 
-- name: Remove Demo Credential
-  ansible.controller.credential:
-    credential_type: Machine
-    name: Demo Credential
-    state: absent
-  failed_when: false
-
-- name: Remove Demo Job Template
-  ansible.controller.job_template:
-    name: Demo Job Template
-    state: absent
-  failed_when: false
-
-- name: Remove Demo Project
-  ansible.controller.project:
-    name: Demo Project
-    state: absent
-  failed_when: false
-
-- name: Remove Demo Inventory
-  ansible.controller.inventory:
-    name: Demo Inventory
-    organization: Default
-    state: absent
-  failed_when: false
-
-- name: Remove Default Organization
-  ansible.controller.organization:
-    name: Default
-    state: absent
-  failed_when: false

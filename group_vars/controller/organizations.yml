@@ -1,4 +1,6 @@
 ---
 controller_organizations:
   - name: Platform
-
+    state: present
+    galaxy_credentials:
+      - Ansible Galaxy
