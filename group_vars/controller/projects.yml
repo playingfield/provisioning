@@ -2,7 +2,7 @@
 controller_projects:
   - name: Vault
     organization: Platform
-    scm_branch: main
+    scm_branch: cluster
     scm_clean: false
     scm_delete_on_update: false
     scm_type: git
