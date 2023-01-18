@@ -12,7 +12,7 @@
   ansible.builtin.meta: flush_handlers
 
 - name: Relax mount options
-  ansible.builtin.mount:
+  ansible.posix.mount:
     src: "{{ item.src }}"
     path: "{{ item.path }}"
     fstype: xfs

@@ -7,7 +7,7 @@
 - name: Unmount RHEL ISO
   when: not mount_dir.stat.exists
   become: true
-  ansible.builtin.mount:
+  ansible.posix.mount:
     path: "{{ rhel8_mnt_dir }}"
     src: "{{ rhel8_iso_image }}"
     opts: ro,loop

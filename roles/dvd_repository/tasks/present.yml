@@ -39,7 +39,7 @@
 
 # - name: Mount RHEL DVD
 #   become: true
-#   ansible.builtin.mount:
+#   ansible.posix.mount:
 #     path: "{{ rhel8_mnt_dir }}"
 #     src: /dev/sr0
 #     opts: ro,noauto,nodev,nosuid,noexec
@@ -50,7 +50,7 @@
 
 - name: Mount RHEL ISO
   become: true
-  ansible.builtin.mount:
+  ansible.posix.mount:
     path: "{{ rhel8_mnt_dir }}"
     src: "{{ rhel8_iso_image }}"
     opts: ro,loop,nodev

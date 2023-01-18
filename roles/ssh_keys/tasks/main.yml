@@ -21,8 +21,8 @@
     pub_key: "files/{{ ssh_keyname }}_rsa.pub"
 
 - name: Install authorized_keys for ansible user
-  ansible.builtin.authorized_key:
-    key: "{{ lookup('file',pub_key) }}"
+  ansible.posix.authorized_key:
+    key: "{{ lookup('file', pub_key) }}"
     user: "{{ ansible_user }}"
     state: present
 
