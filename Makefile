@@ -1,12 +1,14 @@
 ANSIBLE_DEBUG=1
-lint:
-	vagrant validate
-	packer validate rhel8.pkr.hcl
+prepare:
 	ansible-inventory --graph
 	ansible-galaxy install -p roles -f -r roles/requirements.yml
 	ansible-galaxy collection install -r collections/requirements.yml
 	ansible-playbook --syntax-check vagrant-playbook.yml
 	ansible-lint vagrant-playbook.yml
+
+lint:
+	vagrant validate
+	packer validate rhel8.pkr.hcl
 
 clean: lint
 	@vagrant destroy -f

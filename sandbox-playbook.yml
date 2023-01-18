@@ -1,0 +1,77 @@
+#!/usr/bin/env ansible-playbook
+---
+
+- name: Prepare AAP deployment
+  hosts: aap
+  become: true
+  gather_facts: true
+  tags: [prepare]
+  pre_tasks:
+    - name: Setup ssh keys for install
+      ansible.builtin.include_role:
+        name: ssh_keys
+
+- name: Deploy AAP
+  hosts: aap
+  become: true
+  gather_facts: true
+  tags: [deploy]
+  tasks:
+    - name: Install Automation Platform
+      ansible.builtin.include_role:
+        name: aap
+
+- name: Configure Local Collections
+  hosts: localhost
+  become: false
+  gather_facts: false
+  tags: [local]
+
+  pre_tasks:
+    - name: Install collections
+      changed_when: true
+      # yamllint disable-line rule:line-length
+      ansible.builtin.command: "ansible-galaxy collection install -r collections/requirements.yml"
+
+- name: Configure Ansible Controller post installation
+  hosts: localhost
+  connection: local
+  tags: [configure]
+  collections:
+    - awx.awx
+    - infra.controller_configuration
+
+  pre_tasks:
+
+    - name: Include vars from configs directory
+      ansible.builtin.include_vars:
+        dir: group_vars/controller
+        extensions: ["yml"]
+      no_log: true
+      tags:
+        - always
+
+    - name: Wait for API to come up
+      ansible.builtin.uri:
+        url: "https://{{ controller_hostname }}/api/v2/ping"
+        status_code: 200
+        validate_certs: "{{ controller_validate_certs }}"
+      register: result
+      until: result.status == 200
+      retries: 20
+      delay: 3
+      ignore_errors: true
+
+    - name: Sleep for 10 seconds and allow API to come up.
+      ansible.builtin.wait_for:
+        timeout: 10
+      delegate_to: localhost
+
+    - name: Update token
+      ansible.builtin.include_tasks: tasks/get_token.yml
+
+    - name: Remove Demo content
+      ansible.builtin.include_tasks: tasks/delete_demo.yml
+
+  roles:
+    - dispatch  # The dispatch role calls all of the other roles.

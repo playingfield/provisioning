@@ -1,0 +1,19 @@
+[local]
+localhost ansible_ssh_host=127.0.0.1  ansible_connection=local ansible_python_interpreter=python3
+
+[aap:children]
+database
+automationhub
+automationcontroller
+
+[database]
+ansible01
+
+[automationhub]
+ansible02
+
+[automationcontroller]
+ansible01 role=primary
+
+[other]
+localhost ansible_ssh_host=127.0.0.1  ansible_connection=local ansible_python_interpreter=python3
