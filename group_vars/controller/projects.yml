@@ -1,10 +1,18 @@
 ---
 controller_projects:
-  - name: Vault
+  - name: Project
     organization: Platform
-    scm_branch: cluster
+    scm_branch: main
     scm_clean: false
     scm_delete_on_update: false
     scm_type: git
     scm_update_on_launch: false
-    scm_url: https://github.com/dockpack/tower_vault.git
+    scm_url: https://github.com/playingfield/ansible_project.git
+  - name: Inventory
+    organization: Platform
+    scm_branch: main
+    scm_clean: false
+    scm_delete_on_update: false
+    scm_type: git
+    scm_update_on_launch: false
+    scm_url: https://github.com/playingfield/ansible_inventory.git

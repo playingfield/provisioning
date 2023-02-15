@@ -1,10 +1,10 @@
 ---
 controller_inventory_sources:
-  - name: Vault
+  - name: Inventory
     source: scm
-    source_project: Vault
+    source_project: Inventory
     source_path: inventory
-    inventory: Vault
+    inventory: Inventory
     credential: Vagrant
     overwrite: true
     update_on_launch: false
