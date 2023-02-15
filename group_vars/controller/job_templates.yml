@@ -7,3 +7,4 @@ controller_templates:
     playbook: playbook.yml
     credentials:
       - Vagrant
+      - 'ansible-vault'
