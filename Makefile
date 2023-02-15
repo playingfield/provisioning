@@ -1,4 +1,5 @@
 ANSIBLE_DEBUG=1
+DISTRO ?= rhel8
 prepare:
 	ansible-inventory --graph
 	ansible-galaxy install -p roles -f -r roles/requirements.yml
@@ -8,7 +9,7 @@ prepare:
 
 lint:
 	vagrant validate
-	packer validate rhel8.pkr.hcl
+	packer validate ${DISTRO}.pkr.hcl
 
 clean: lint
 	@vagrant destroy -f
@@ -16,15 +17,15 @@ clean: lint
 	@ssh-keygen -R 192.168.56.12
 	@ssh-keygen -R 192.168.56.13
 	@vagrant box remove rhel/efi || /usr/bin/true
-	@rm -rf output-rhel8 .vagrant
+	@rm -rf output-${DISTRO} .vagrant
 
-output-rhel8/rhel8.box:
-	packer build rhel8.pkr.hcl
+output-${DISTRO}/${DISTRO}.box:
+	packer build ${DISTRO}.pkr.hcl
 
-box: output-rhel8/rhel8.box
-	vagrant box add --force --name rhel/efi output-rhel8/rhel8.box
+box: output-${DISTRO}/${DISTRO}.box
+	vagrant box add --force --name rhel/efi output-${DISTRO}/${DISTRO}.box
 
-image: output-rhel8/rhel8.box
+image: output-${DISTRO}/${DISTRO}.box
 
 all: clean box
 	vagrant up

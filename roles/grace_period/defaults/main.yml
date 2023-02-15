@@ -1,2 +1,7 @@
 ---
 granted_exception: present
+tmp_mounts:
+  - /tmp
+  - /var/tmp
+
+
