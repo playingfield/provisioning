@@ -1,10 +1,10 @@
 ---
 controller_templates:
-  - name: Deploy Software
+  - name: GitOps Reconciliation
     job_type: run
-    inventory: Inventory
-    project: Project
+    inventory: Controller
+    project: Controller
     playbook: playbook.yml
     credentials:
-      - Vagrant
       - 'ansible-vault'
+    state: present

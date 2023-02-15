@@ -1,18 +1,11 @@
 ---
 controller_projects:
-  - name: Project
+  - name: Controller
     organization: Platform
     scm_branch: main
-    scm_clean: false
-    scm_delete_on_update: false
+    scm_clean: true
+    scm_delete_on_update: true
     scm_type: git
     scm_update_on_launch: false
-    scm_url: https://github.com/playingfield/ansible_project.git
-  - name: Inventory
-    organization: Platform
-    scm_branch: main
-    scm_clean: false
-    scm_delete_on_update: false
-    scm_type: git
-    scm_update_on_launch: false
-    scm_url: https://github.com/playingfield/ansible_inventory.git
+    scm_url: https://github.com/playingfield/ansible_controller.git
+    state: present

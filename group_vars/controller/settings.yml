@@ -1,4 +1,5 @@
 ---
+controller_configuration_project_update_async_retries: 180
 controller_settings:
   settings:
     AWX_ISOLATION_BASE_PATH: /var/tmp

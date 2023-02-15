@@ -1,6 +1,4 @@
 ---
 controller_inventories:
-  - name: Local
-    organization: Platform
-  - name: Vault
+  - name: Controller
     organization: Platform

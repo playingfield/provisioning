@@ -1,11 +1,11 @@
 ---
 controller_inventory_sources:
-  - name: Inventory
+  - name: Controller
     source: scm
-    source_project: Inventory
+    source_project: Controller
     source_path: inventory
-    inventory: Inventory
+    inventory: Controller
     credential: Vagrant
     overwrite: true
-    update_on_launch: false
+    update_on_launch: true
     update_cache_timeout: 0
