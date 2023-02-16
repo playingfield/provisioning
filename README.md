@@ -1,7 +1,10 @@
 # Provisioning
 
 [Wiki Page](https://github.com/playingfield/provisioning/wiki)
-We create an image with Hashicorp Packer and then use it to create VMs with Vagrant. The VMs run Ansible Automation Platform.
+
+## What is this?
+
+We create an image with Hashicorp Packer and then use it to create VMs with Vagrant. The VMs run Ansible Automation Platform,
 
 `make all`
 
